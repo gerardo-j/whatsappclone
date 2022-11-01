@@ -2,6 +2,7 @@ package com.example.whatsappclone;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -16,6 +17,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private Button btnRegister;
+    private Button btnSignOut;
     private FirebaseAuth mAuth;
 
     @Override
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        btnSignOut = findViewById(R.id.btn_signOut);
+        addClickListener();
     }
 
     @Override
@@ -55,6 +60,18 @@ public class MainActivity extends AppCompatActivity {
                     .build();
             signInLauncher.launch(signInIntent);
         }
+    }
+
+    private void addClickListener() {
+        btnSignOut.setOnClickListener(view -> signOut());
+    }
+
+    private void signOut() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(task -> {
+                    // ...
+                });
     }
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
