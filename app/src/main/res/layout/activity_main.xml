@@ -7,22 +7,37 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/test"
+        android:id="@+id/txt_sign_in_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toTopOf="@id/btn_signOut"
+        android:text="Welcome to the message app"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="96dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <Button
-        android:id="@+id/btn_signOut"
+
+    <TextView
+        android:id="@+id/txt_sign_in_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignOut"
-        app:layout_constraintTop_toBottomOf="@+id/test"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Welcome to the message app"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/txt_sign_in_heading"
+        app:layout_constraintStart_toStartOf="@+id/txt_sign_in_heading"
+        app:layout_constraintTop_toBottomOf="@+id/txt_sign_in_heading" />
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SignIn"
+        android:layout_marginBottom="96dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
