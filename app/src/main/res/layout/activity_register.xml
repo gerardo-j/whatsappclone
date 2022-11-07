@@ -7,7 +7,7 @@
     tools:context=".RegisterActivity">
 
     <TextView
-        android:id="@+id/txtSignIHeading"
+        android:id="@+id/txtSignInHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Messaging app"
@@ -26,9 +26,9 @@
         android:text="Register an account"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/txtSignIHeading"
-        app:layout_constraintStart_toStartOf="@+id/txtSignIHeading"
-        app:layout_constraintTop_toBottomOf="@+id/txtSignIHeading" />
+        app:layout_constraintEnd_toEndOf="@+id/txtSignInHeading"
+        app:layout_constraintStart_toStartOf="@+id/txtSignInHeading"
+        app:layout_constraintTop_toBottomOf="@+id/txtSignInHeading" />
 
     <EditText
         android:id="@+id/editTxtFirstName"

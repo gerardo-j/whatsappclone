@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private SharedPreferences authPref;
     private FirebaseAuth mAuth;
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setClickListener() {
         btnSignIn.setOnClickListener(view -> signIn());
-        txtForgotPassword.setOnClickListener(view -> Log.d(TAG, "Forgot Password"));
+        txtForgotPassword.setOnClickListener(view -> startActivity(new Intent(this, ResetPasswordActivity.class)));
         txtRegister.setOnClickListener(view -> startActivity(new Intent(this, RegisterActivity.class)));
     }
 

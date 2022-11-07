@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setClickListener() {
         btnSignIn.setOnClickListener(view -> registerUser());
-        txtLogin.setOnClickListener(view -> startActivity(new Intent(this, LoginActivity.class)));
+        txtLogin.setOnClickListener(view -> startActivity(new Intent(this, SignInActivity.class)));
     }
 
     private void registerUser() {
