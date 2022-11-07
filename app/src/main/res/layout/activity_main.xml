@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/txt_sign_in_heading"
+        android:id="@+id/txtSignIHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome to the message app"
@@ -20,18 +20,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txt_sign_in_description"
+        android:id="@+id/txtSignInDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome to the message app"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/txt_sign_in_heading"
-        app:layout_constraintStart_toStartOf="@+id/txt_sign_in_heading"
-        app:layout_constraintTop_toBottomOf="@+id/txt_sign_in_heading" />
+        app:layout_constraintEnd_toEndOf="@+id/txtSignIHeading"
+        app:layout_constraintStart_toStartOf="@+id/txtSignIHeading"
+        app:layout_constraintTop_toBottomOf="@+id/txtSignIHeading" />
 
     <Button
-        android:id="@+id/btn_sign_in"
+        android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SignIn"
