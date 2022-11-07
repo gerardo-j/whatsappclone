@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private SharedPreferences authPref;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar ;
     private Button btnSignIn;
     private TextView txtForgotPassword, txtRegister;
     private EditText editTxtEmail, editTxtPassword;
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
 
+        progressBar = findViewById(R.id.progressBar);
         btnSignIn = findViewById(R.id.btnRegister);
         txtForgotPassword = findViewById(R.id.txtForgotPassword);
         txtRegister = findViewById(R.id.txtSignIn);
@@ -73,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        progressBar.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -85,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
+                    progressBar.setVisibility(View.INVISIBLE);
                 });
     }
 

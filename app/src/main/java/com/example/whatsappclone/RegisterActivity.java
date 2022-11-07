@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
+                        Log.d(TAG, "registerWithEmail:success");
                         User user = new User(firstName, lastName, email);
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         if (currentUser != null) {
