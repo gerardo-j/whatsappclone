@@ -105,15 +105,17 @@ public class RegisterActivity extends AppCompatActivity {
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             Log.d(TAG, "success");
+                                            SharedPreferences.Editor editAuthPref = authPref.edit();
+                                            editAuthPref.putBoolean("isAuth", true);
+                                            editAuthPref.apply();
+                                            startActivity(new Intent(this, SplashActivity.class));
+                                            finish();
                                             Toast.makeText(this, "DB register success.", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
-                        SharedPreferences.Editor editAuthPref = authPref.edit();
-                        editAuthPref.putBoolean("isAuth", true);
-                        editAuthPref.apply();
                         Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
                     } else {
                         // If sign in fails, display a message to the user.
