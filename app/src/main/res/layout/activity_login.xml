@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTxtEmailAddress" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnSignOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SignIn"
@@ -77,9 +77,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
-        app:layout_constraintEnd_toEndOf="@+id/btnRegister"
-        app:layout_constraintStart_toStartOf="@+id/btnRegister"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
+        app:layout_constraintEnd_toEndOf="@+id/btnSignOut"
+        app:layout_constraintStart_toStartOf="@+id/btnSignOut"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignOut" />
 
     <ProgressBar
         android:id="@+id/progressBar"

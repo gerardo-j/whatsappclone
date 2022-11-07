@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
 
         progressBar = findViewById(R.id.progressBar);
-        btnSignIn = findViewById(R.id.btnRegister);
+        btnSignIn = findViewById(R.id.btnSignOut);
         txtForgotPassword = findViewById(R.id.txtForgotPassword);
         txtRegister = findViewById(R.id.txtSignIn);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
@@ -84,8 +83,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editAuthPref = authPref.edit();
+                        editAuthPref.putBoolean("isAuth", true);
+                        editAuthPref.apply();
+                        startActivity(new Intent(this, MainActivity.class));
+                        finish();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());

@@ -1,6 +1,5 @@
 package com.example.whatsappclone;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,16 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-
+    SharedPreferences authPref;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar ;
     private Button btnSignIn;
@@ -37,10 +33,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
-        SharedPreferences authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+        authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
 
         progressBar = findViewById(R.id.progressBar);
-        btnSignIn = findViewById(R.id.btnRegister);
+        btnSignIn = findViewById(R.id.btnSignOut);
         txtLogin = findViewById(R.id.txtSignIn);
         editTxtFirstName = findViewById(R.id.editTxtFirstName);
         editTxtLastName = findViewById(R.id.editTxtLastName);
@@ -115,7 +111,9 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-
+                        SharedPreferences.Editor editAuthPref = authPref.edit();
+                        editAuthPref.putBoolean("isAuth", true);
+                        editAuthPref.apply();
                         Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
                     } else {
                         // If sign in fails, display a message to the user.
