@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -16,11 +17,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-    SharedPreferences authPref;
+    private SharedPreferences authPref;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar ;
     private Button btnSignIn;
@@ -92,19 +94,27 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
+                .addOnCompleteListener(this, createUserTask -> {
+                    if (createUserTask.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "registerWithEmail:success");
                         User user = new User(firstName, lastName, email);
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         if (currentUser != null) {
+                            Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
+
+                            String displayName = firstName + ' ' + lastName;
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(displayName)
+                                    .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
+                                    .build();
+                            currentUser.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(updateProfileTask -> Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show());
+
                             FirebaseDatabase.getInstance().getReference("user")
                                     .child(currentUser.getUid())
                                     .setValue(user)
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Log.d(TAG, "success");
+                                    .addOnCompleteListener(updateDatabaseTask -> {
+                                        if (updateDatabaseTask.isSuccessful()) {
                                             SharedPreferences.Editor editAuthPref = authPref.edit();
                                             editAuthPref.putBoolean("isAuth", true);
                                             editAuthPref.apply();
@@ -116,10 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-                        Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
                         Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                     progressBar.setVisibility(View.INVISIBLE);
