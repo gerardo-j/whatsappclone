@@ -39,10 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        imageProfile = findViewById(R.id.imageProfile);
-        txtProfileName = findViewById(R.id.txtProfileName);
-        txtProfileEmail = findViewById(R.id.txtProfileEmail);
-        btnDeleteUser = findViewById(R.id.btnDeleteUser);
+        initViews();
+
         Glide.with(this)
             .load(mUser.getPhotoUrl())
             .error(R.drawable.default_profile_icon)
@@ -52,15 +50,21 @@ public class SettingsActivity extends AppCompatActivity {
         btnDeleteUser.setOnClickListener(view -> deleteUser());
     }
 
+    private void initViews() {
+        imageProfile = findViewById(R.id.imageProfile);
+        txtProfileName = findViewById(R.id.txtProfileName);
+        txtProfileEmail = findViewById(R.id.txtProfileEmail);
+        btnDeleteUser = findViewById(R.id.btnDeleteUser);
+    }
+
     private void deleteUser() {
-        Toast.makeText(this, "Clicked Delete", Toast.LENGTH_LONG).show();
         mUser.delete()
             .addOnCompleteListener(deleteUserTask -> {
                 if (deleteUserTask.isSuccessful()) {
                     editAuthPref.putBoolean("isAuth", false);
                     editAuthPref.apply();
                     Toast.makeText(this, "Deleted user", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, SplashActivity.class));
+                    startActivity(new Intent(this, SignInActivity.class));
                     finish();
                 } else {
                     Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show();
