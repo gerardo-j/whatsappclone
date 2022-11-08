@@ -51,9 +51,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
         mAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener(task -> {
+            .addOnCompleteListener(resetPasswordTask -> {
                 progressBar.setVisibility(View.INVISIBLE);
-                if (task.isSuccessful()) {
+                if (resetPasswordTask.isSuccessful()) {
                     Toast.makeText(this, "Email send.", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

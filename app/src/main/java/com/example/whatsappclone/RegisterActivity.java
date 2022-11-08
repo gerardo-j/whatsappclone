@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, createUserTask -> {
+            .addOnCompleteListener(createUserTask -> {
                 if (createUserTask.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     User user = new User(firstName, lastName, email);
