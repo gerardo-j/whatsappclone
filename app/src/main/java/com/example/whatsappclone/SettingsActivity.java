@@ -61,10 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
         mUser.delete()
             .addOnCompleteListener(deleteUserTask -> {
                 if (deleteUserTask.isSuccessful()) {
-                    editAuthPref.putBoolean("isAuth", false);
-                    editAuthPref.apply();
-                    Toast.makeText(this, "Deleted user", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, SignInActivity.class));
                     finish();
                 } else {
                     Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show();

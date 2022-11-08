@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class SplashActivity extends AppCompatActivity {
     public static final String AUTH_PREF_NAME = "AuthPref";
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "SplashActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

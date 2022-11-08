@@ -108,8 +108,6 @@ public class RegisterActivity extends AppCompatActivity {
                     User user = new User(firstName, lastName, email);
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     if (currentUser != null) {
-                        Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
-
                         String displayName = firstName + ' ' + lastName;
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(displayName)

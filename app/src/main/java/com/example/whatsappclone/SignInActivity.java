@@ -55,8 +55,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-        Log.d(TAG, "SignIn");
-
         String email = editTxtEmail.getText().toString().trim();
         String password = editTxtPassword.getText().toString().trim();
 
@@ -87,8 +85,6 @@ public class SignInActivity extends AppCompatActivity {
             .addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success");
-                    Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
                     editAuthPref.putBoolean("isAuth", true);
                     editAuthPref.apply();
                     startActivity(new Intent(this, MainActivity.class));

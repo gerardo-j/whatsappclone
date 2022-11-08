@@ -51,23 +51,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onAuthStateChanged(FirebaseAuth auth) {
-        if (auth == null) {
-            Toast.makeText(this, "Auth changed, authed = false", Toast.LENGTH_SHORT).show();
+        if (auth.getCurrentUser() == null) {
+            Log.d(TAG, "AUTH changed, authed = false");
+            editAuthPref.putBoolean("isAuth", false);
+            editAuthPref.apply();
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
         } else {
-            Toast.makeText(this, "Auth changed, authed = true", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "AUTH changed, authed = true");
         }
     }
 
     private void addClickListener() {
-        btnSignOut.setOnClickListener(view -> signOut());
-    }
-
-    private void signOut() {
-        editAuthPref.putBoolean("isAuth", false);
-        editAuthPref.apply();
-        mAuth.signOut();
-        startActivity(new Intent(this, SplashActivity.class));
-        finish();
+        btnSignOut.setOnClickListener(view -> mAuth.signOut());
     }
 
     @Override
@@ -79,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menuItemSettings) {
-            Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         } else {
