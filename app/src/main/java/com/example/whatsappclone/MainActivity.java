@@ -30,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ;
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
         editAuthPref = authPref.edit();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+        mAuth.addAuthStateListener(this::onAuthStateChanged);
 
         btnSignOut = findViewById(R.id.btnSignOut);
         addClickListener();
@@ -45,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if(mUser == null){
             Toast.makeText(this, "User is null - Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onAuthStateChanged(FirebaseAuth auth) {
+        if (auth == null) {
+            Toast.makeText(this, "Auth changed, authed = false", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Auth changed, authed = true", Toast.LENGTH_SHORT).show();
         }
     }
 
