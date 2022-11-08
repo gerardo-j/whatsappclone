@@ -24,7 +24,7 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SharedPreferences.Editor editAuthPref;
 
-    private ProgressBar progressBar ;
+    private ProgressBar progressBar;
     private Button btnSignIn;
     private TextView txtForgotPassword, txtRegister;
     private EditText editTxtEmail, editTxtPassword;
@@ -84,22 +84,22 @@ public class SignInActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
-                        Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
-                        editAuthPref.putBoolean("isAuth", true);
-                        editAuthPref.apply();
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    }
-                    progressBar.setVisibility(View.INVISIBLE);
-                });
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithEmail:success");
+                    Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                    editAuthPref.putBoolean("isAuth", true);
+                    editAuthPref.apply();
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+            });
     }
 
 

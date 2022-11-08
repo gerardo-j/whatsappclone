@@ -102,44 +102,44 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, createUserTask -> {
-                    if (createUserTask.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        User user = new User(firstName, lastName, email);
-                        FirebaseUser currentUser = mAuth.getCurrentUser();
-                        if (currentUser != null) {
-                            Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
+            .addOnCompleteListener(this, createUserTask -> {
+                if (createUserTask.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    User user = new User(firstName, lastName, email);
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    if (currentUser != null) {
+                        Toast.makeText(this, "Authentication register success.", Toast.LENGTH_SHORT).show();
 
-                            String displayName = firstName + ' ' + lastName;
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(displayName)
-                                    .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
-                                    .build();
-                            currentUser.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(updateProfileTask -> Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show());
+                        String displayName = firstName + ' ' + lastName;
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(displayName)
+                            .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
+                            .build();
+                        currentUser.updateProfile(profileUpdates)
+                            .addOnCompleteListener(updateProfileTask -> Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show());
 
-                            FirebaseDatabase.getInstance().getReference("user")
-                                    .child(currentUser.getUid())
-                                    .setValue(user)
-                                    .addOnCompleteListener(updateDatabaseTask -> {
-                                        if (updateDatabaseTask.isSuccessful()) {
-                                            editAuthPref.putBoolean("isAuth", true);
-                                            editAuthPref.apply();
-                                            startActivity(new Intent(this, SplashActivity.class));
-                                            finish();
-                                            Toast.makeText(this, "DB register success.", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
-                        Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        FirebaseDatabase.getInstance().getReference("user")
+                            .child(currentUser.getUid())
+                            .setValue(user)
+                            .addOnCompleteListener(updateDatabaseTask -> {
+                                if (updateDatabaseTask.isSuccessful()) {
+                                    editAuthPref.putBoolean("isAuth", true);
+                                    editAuthPref.apply();
+                                    startActivity(new Intent(this, SplashActivity.class));
+                                    finish();
+                                    Toast.makeText(this, "DB register success.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                     }
-                    progressBar.setVisibility(View.INVISIBLE);
-                });
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
+                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+            });
     }
 
 }
