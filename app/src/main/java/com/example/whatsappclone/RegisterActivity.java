@@ -114,7 +114,10 @@ public class RegisterActivity extends AppCompatActivity {
                             .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
                             .build();
                         currentUser.updateProfile(profileUpdates)
-                            .addOnCompleteListener(updateProfileTask -> Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show());
+                            .addOnCompleteListener(updateProfileTask -> {
+                                if (!updateProfileTask.isSuccessful())
+                                    Toast.makeText(this, "Profile create failed", Toast.LENGTH_SHORT).show();
+                            });
 
                         FirebaseDatabase.getInstance().getReference("user")
                             .child(currentUser.getUid())
@@ -125,7 +128,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     editAuthPref.apply();
                                     startActivity(new Intent(this, SplashActivity.class));
                                     finish();
-                                    Toast.makeText(this, "DB register success.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
                                 }
@@ -134,7 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
-                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Registering failed.", Toast.LENGTH_SHORT).show();
                 }
                 progressBar.setVisibility(View.INVISIBLE);
             });
