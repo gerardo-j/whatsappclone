@@ -19,8 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+
     private SharedPreferences authPref;
     private FirebaseAuth mAuth;
+    private SharedPreferences.Editor editAuthPref;
+
     private ProgressBar progressBar ;
     private Button btnSignIn;
     private TextView txtForgotPassword, txtRegister;
@@ -30,8 +33,10 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAuth = FirebaseAuth.getInstance();
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+        editAuthPref = authPref.edit();
 
         progressBar = findViewById(R.id.progressBar);
         btnSignIn = findViewById(R.id.btnSignOut);
@@ -84,7 +89,6 @@ public class SignInActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
                         Toast.makeText(this, "Authentication success.", Toast.LENGTH_SHORT).show();
-                        SharedPreferences.Editor editAuthPref = authPref.edit();
                         editAuthPref.putBoolean("isAuth", true);
                         editAuthPref.apply();
                         startActivity(new Intent(this, MainActivity.class));

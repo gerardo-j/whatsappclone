@@ -14,13 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
     private SharedPreferences authPref;
+    private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
     private Button btnSignOut;
-    private TextView txtDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +32,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+        editAuthPref = authPref.edit();
         mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         btnSignOut = findViewById(R.id.btnSignOut);
-        txtDescription = findViewById(R.id.txtSignInDescription);
         addClickListener();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(mUser == null){
+            Toast.makeText(this, "User is null - Something went wrong", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addClickListener() {
@@ -40,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-        SharedPreferences.Editor editAuthPref = authPref.edit();
         editAuthPref.putBoolean("isAuth", false);
         editAuthPref.apply();
         mAuth.signOut();

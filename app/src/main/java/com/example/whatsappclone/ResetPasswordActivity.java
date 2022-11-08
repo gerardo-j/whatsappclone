@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordActivity extends AppCompatActivity {
-
     private static final String TAG = "ResetPasswordActivity";
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
@@ -26,10 +25,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
         mAuth = FirebaseAuth.getInstance();
 
+        initViews();
+        btnResetPassword.setOnClickListener(view -> resetPassword());
+    }
+
+    private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         btnResetPassword = findViewById(R.id.btnResetPassword);
-        btnResetPassword.setOnClickListener(view -> resetPassword());
     }
 
     private void resetPassword() {

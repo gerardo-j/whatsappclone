@@ -22,9 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
+
     private SharedPreferences authPref;
+    SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
-    private ProgressBar progressBar ;
+
+    private ProgressBar progressBar;
     private Button btnSignIn;
     private TextView txtLogin;
     private EditText editTxtEmail, editTxtPassword, editTxtFirstName, editTxtLastName;
@@ -34,9 +37,15 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mAuth = FirebaseAuth.getInstance();
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+        editAuthPref = authPref.edit();
+        mAuth = FirebaseAuth.getInstance();
 
+        initViews();
+        setClickListener();
+    }
+
+    private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         btnSignIn = findViewById(R.id.btnSignOut);
         txtLogin = findViewById(R.id.txtSignIn);
@@ -44,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
         editTxtLastName = findViewById(R.id.editTxtLastName);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         editTxtPassword = findViewById(R.id.editTxtPassword);
-        setClickListener();
     }
 
     private void setClickListener() {
@@ -115,7 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     .setValue(user)
                                     .addOnCompleteListener(updateDatabaseTask -> {
                                         if (updateDatabaseTask.isSuccessful()) {
-                                            SharedPreferences.Editor editAuthPref = authPref.edit();
                                             editAuthPref.putBoolean("isAuth", true);
                                             editAuthPref.apply();
                                             startActivity(new Intent(this, SplashActivity.class));
