@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.internal.InternalTokenResult;
+
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -49,6 +52,12 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAuth.removeAuthStateListener(this::onAuthStateChanged);
+    }
+
     private void onAuthStateChanged(FirebaseAuth auth) {
         if (auth.getCurrentUser() == null) {
             Log.d(TAG, "AUTH changed, authed = false");
@@ -57,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
         } else {
+            auth.getCurrentUser().reload();
             Log.d(TAG, "AUTH changed, authed = true");
         }
     }
@@ -76,8 +86,6 @@ public class HomeActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menuItemSettings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else {
-            Log.d(TAG, "Unexpected item clicked");
         }
         return super.onOptionsItemSelected(item);
     }
