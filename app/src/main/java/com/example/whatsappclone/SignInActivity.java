@@ -87,7 +87,7 @@ public class SignInActivity extends AppCompatActivity {
                     // Sign in success, update UI with the signed-in user's information
                     editAuthPref.putBoolean("isAuth", true);
                     editAuthPref.apply();
-                    startActivity(new Intent(this, MainActivity.class));
+                    startActivity(new Intent(this, HomeActivity.class));
                     finish();
                 } else {
                     // If sign in fails, display a message to the user.

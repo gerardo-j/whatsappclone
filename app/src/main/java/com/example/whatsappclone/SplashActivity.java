@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         Log.d(TAG, "Is authed = " + isAuth);
 
         if (isAuth) { // Start main activity
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, HomeActivity.class));
         } else { // Start login activity
             startActivity(new Intent(this, SignInActivity.class));
         }
