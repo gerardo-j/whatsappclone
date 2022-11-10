@@ -28,7 +28,6 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseUser mUser;
 
     private FloatingActionButton fabCreateMessage;
-    private Button btnSignOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class HomeActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(this::onAuthStateChanged);
 
         fabCreateMessage = findViewById(R.id.fabCreateMessage);
-        btnSignOut = findViewById(R.id.btnSignOut);
         addClickListener();
     }
 
@@ -76,7 +74,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void addClickListener() {
-        btnSignOut.setOnClickListener(view -> mAuth.signOut());
         fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
     }
 
