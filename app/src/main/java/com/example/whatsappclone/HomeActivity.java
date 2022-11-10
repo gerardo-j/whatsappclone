@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.internal.InternalTokenResult;
@@ -26,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
+    private FloatingActionButton fabCreateMessage;
     private Button btnSignOut;
 
     @Override
@@ -40,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
 
         mAuth.addAuthStateListener(this::onAuthStateChanged);
 
+        fabCreateMessage = findViewById(R.id.fabCreateMessage);
         btnSignOut = findViewById(R.id.btnSignOut);
         addClickListener();
     }
@@ -67,12 +70,14 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         } else {
             auth.getCurrentUser().reload();
+            Log.d(TAG, "onAuthStateChanged reload()");
             Log.d(TAG, "AUTH changed, authed = true");
         }
     }
 
     private void addClickListener() {
         btnSignOut.setOnClickListener(view -> mAuth.signOut());
+        fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
     }
 
     @Override
@@ -85,6 +90,10 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menuItemSettings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+        if (item.getItemId() == R.id.menuItemSignOut) {
+            mAuth.signOut();
             return true;
         }
         return super.onOptionsItemSelected(item);
