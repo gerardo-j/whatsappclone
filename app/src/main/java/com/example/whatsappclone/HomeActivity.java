@@ -2,6 +2,8 @@ package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,15 +11,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.internal.InternalTokenResult;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -27,7 +27,11 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
+    private ArrayList<MessageChannel> channels;
+    private MessageChannelAdapter messageChannelAdapter;
+
     private FloatingActionButton fabCreateMessage;
+    private RecyclerView recyclerMessageChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,15 @@ public class HomeActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(this::onAuthStateChanged);
 
         fabCreateMessage = findViewById(R.id.fabCreateMessage);
+        recyclerMessageChannel = findViewById(R.id.recyclerMessageChannel);
+
+        recyclerMessageChannel.setLayoutManager(new LinearLayoutManager(this));
+
+        channels = new ArrayList<>();
+        messageChannelAdapter = new MessageChannelAdapter(this, channels);
+        recyclerMessageChannel.setAdapter(messageChannelAdapter);
+
+        loadChannels();
         addClickListener();
     }
 
@@ -75,6 +88,14 @@ public class HomeActivity extends AppCompatActivity {
 
     private void addClickListener() {
         fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
+    }
+
+    private void loadChannels() {
+        channels.clear();
+
+        channels.add(new MessageChannel("Test", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannel("Test 2", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        messageChannelAdapter.notifyItemRangeInserted(0, 2);
     }
 
     @Override
