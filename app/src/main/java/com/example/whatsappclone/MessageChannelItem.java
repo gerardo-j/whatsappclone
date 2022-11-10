@@ -1,15 +1,15 @@
 package com.example.whatsappclone;
 
-public class MessageChannel {
+public class MessageChannelItem {
 
     private String name;
     private String imageUrl;
 
-    public MessageChannel(String name) {
+    public MessageChannelItem(String name) {
         this.name = name;
     }
 
-    public MessageChannel(String name, String imageUrl) {
+    public MessageChannelItem(String name, String imageUrl) {
         this.name = name;
         this.imageUrl = imageUrl;
     }

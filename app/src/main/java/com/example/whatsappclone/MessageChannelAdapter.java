@@ -1,6 +1,8 @@
 package com.example.whatsappclone;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,11 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAdapter.ViewHolder> {
-
+    private static final String TAG = "MessageChannelAdapter";
     private Context context;
-    private ArrayList<MessageChannel> channels;
+    private ArrayList<MessageChannelItem> channels;
 
-    public MessageChannelAdapter(Context context, ArrayList<MessageChannel> channels) {
+    public MessageChannelAdapter(Context context, ArrayList<MessageChannelItem> channels) {
         this.context = context;
         this.channels = channels;
     }
@@ -40,7 +42,7 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
         return channels.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder {
+    protected class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView txtChannelName;
         private final ImageView imageChannel;
@@ -51,9 +53,15 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
             imageChannel = itemView.findViewById(R.id.imageChannel);
         }
 
-        public void bindItem(MessageChannel currentMessageChannel) {
-            txtChannelName.setText(currentMessageChannel.getName());
-            Glide.with(context).load(currentMessageChannel.getImageUrl()).into(imageChannel);
+        public void bindItem(MessageChannelItem currentMessageChannelItem) {
+            txtChannelName.setText(currentMessageChannelItem.getName());
+            Glide.with(context).load(currentMessageChannelItem.getImageUrl()).into(imageChannel);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.d(TAG, "Clicked view");
+            context.startActivity(new Intent(context, MessageChannelActivity.class));
         }
     }
 }

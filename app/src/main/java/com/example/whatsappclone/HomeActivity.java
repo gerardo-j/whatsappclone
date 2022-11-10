@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    private ArrayList<MessageChannel> channels;
+    private ArrayList<MessageChannelItem> channels;
     private MessageChannelAdapter messageChannelAdapter;
 
     private FloatingActionButton fabCreateMessage;
@@ -93,9 +93,14 @@ public class HomeActivity extends AppCompatActivity {
     private void loadChannels() {
         channels.clear();
 
-        channels.add(new MessageChannel("Test", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannel("Test 2", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        messageChannelAdapter.notifyItemRangeInserted(0, 2);
+        channels.add(new MessageChannelItem("Test", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 2", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 3", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 4", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 5", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 6", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        channels.add(new MessageChannelItem("Test 7", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
+        messageChannelAdapter.notifyItemRangeInserted(0, 7);
     }
 
     @Override
