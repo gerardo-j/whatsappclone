@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
             super(itemView);
             txtChannelName = itemView.findViewById(R.id.txtChannelName);
             imageChannel = itemView.findViewById(R.id.imageChannel);
+            itemView.setOnClickListener(this);
         }
 
         public void bindItem(MessageChannelItem currentMessageChannelItem) {

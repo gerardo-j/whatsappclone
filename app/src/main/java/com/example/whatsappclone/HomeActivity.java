@@ -2,6 +2,7 @@ package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 
         channels = new ArrayList<>();
         messageChannelAdapter = new MessageChannelAdapter(this, channels);
+        recyclerMessageChannel.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerMessageChannel.setAdapter(messageChannelAdapter);
 
         loadChannels();
