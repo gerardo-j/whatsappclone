@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:rowCount="4"
+    android:columnCount="4"
     tools:context=".HomeActivity">
-
-    <TextView
-        android:id="@+id/txtSignInHeading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to the message app"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="96dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txtSignInDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to the message app"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/txtSignInHeading"
-        app:layout_constraintStart_toStartOf="@+id/txtSignInHeading"
-        app:layout_constraintTop_toBottomOf="@+id/txtSignInHeading" />
-
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreateMessage"
@@ -36,18 +14,22 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_message_32" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/ic_baseline_message_32"
+        android:contentDescription="Send a new message" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMessageChannel"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutHome"
         android:layout_width="match_parent"
-        android:layout_height="570dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSignInDescription" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+    </com.google.android.material.tabs.TabLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pagerHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayoutHome"/>
+</RelativeLayout>

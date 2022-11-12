@@ -2,9 +2,8 @@ package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,49 +14,58 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private static final int NUM_PAGES = 2;
 
     private SharedPreferences authPref;
     private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
-    private ArrayList<MessageChannelItem> channels;
-    private MessageChannelAdapter messageChannelAdapter;
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter pagerAdapter;
 
     private FloatingActionButton fabCreateMessage;
-    private RecyclerView recyclerMessageChannel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ;
-        authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
-        editAuthPref = authPref.edit();
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        initAuth();
+        initViews();
 
-        mAuth.addAuthStateListener(this::onAuthStateChanged);
+        tabLayout.addTab(tabLayout.newTab().setText("Chats"));
+        tabLayout.addTab(tabLayout.newTab().setText("Status"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int currPos = tab.getPosition();
+                Log.d(TAG, "inside onTabSelection: tab position = "+currPos);
+                viewPager.setCurrentItem(currPos);
+            }
 
-        fabCreateMessage = findViewById(R.id.fabCreateMessage);
-        recyclerMessageChannel = findViewById(R.id.recyclerMessageChannel);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        recyclerMessageChannel.setLayoutManager(new LinearLayoutManager(this));
+            }
 
-        channels = new ArrayList<>();
-        messageChannelAdapter = new MessageChannelAdapter(this, channels);
-        recyclerMessageChannel.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerMessageChannel.setAdapter(messageChannelAdapter);
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-        loadChannels();
-        addClickListener();
+            }
+        });
+
+        pagerAdapter = new HomePagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
+
+        fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
     }
 
     @Override
@@ -74,6 +82,31 @@ public class HomeActivity extends AppCompatActivity {
         mAuth.removeAuthStateListener(this::onAuthStateChanged);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
+    }
+
+    private void initAuth() {
+        authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+        editAuthPref = authPref.edit();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        mAuth.addAuthStateListener(this::onAuthStateChanged);
+    }
+
+    private void initViews() {
+        fabCreateMessage = findViewById(R.id.fabCreateMessage);
+        viewPager = findViewById(R.id.pagerHome);
+        tabLayout = findViewById(R.id.tabLayoutHome);
+
+    }
+
     private void onAuthStateChanged(FirebaseAuth auth) {
         if (auth.getCurrentUser() == null) {
             Log.d(TAG, "AUTH changed, authed = false");
@@ -83,26 +116,8 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         } else {
             auth.getCurrentUser().reload();
-            Log.d(TAG, "onAuthStateChanged reload()");
             Log.d(TAG, "AUTH changed, authed = true");
         }
-    }
-
-    private void addClickListener() {
-        fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
-    }
-
-    private void loadChannels() {
-        channels.clear();
-
-        channels.add(new MessageChannelItem("Test", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 2", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 3", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 4", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 5", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 6", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        channels.add(new MessageChannelItem("Test 7", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"));
-        messageChannelAdapter.notifyItemRangeInserted(0, 7);
     }
 
     @Override
