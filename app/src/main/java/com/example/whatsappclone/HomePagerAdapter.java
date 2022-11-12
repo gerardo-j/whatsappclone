@@ -14,7 +14,14 @@ public class HomePagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new HomeChatsFragment();
+        switch (position) {
+            case 0:
+                return new HomeChatsFragment();
+            case 1:
+                return new HomeStatusFragment();
+            default:
+                return null;
+        }
     }
 
     @Override
