@@ -17,10 +17,11 @@
         tools:targetApi="31">
         <activity
             android:name=".MessageChannelActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
             <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+                    android:name="android.app.lib_name"
+                    android:value="" />
         </activity>
         <activity
             android:name=".CreateMessageActivity"
@@ -47,7 +48,8 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".SignInActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
