@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         pagerAdapter = new HomePagerAdapter(this);
         pagerHome.setAdapter(pagerAdapter);
 
+        tabLayout.setTabIndicatorFullWidth(true);
         new TabLayoutMediator(tabLayout, pagerHome, (tab, position) -> {
             switch (position) {
                 case 0:
