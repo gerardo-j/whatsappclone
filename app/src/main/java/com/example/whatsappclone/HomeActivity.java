@@ -15,20 +15,19 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private static final int NUM_PAGES = 2;
 
     private SharedPreferences authPref;
     private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
 
     private TabLayout tabLayout;
-    private ViewPager2 viewPager;
+    private ViewPager2 pagerHome;
     private FragmentStateAdapter pagerAdapter;
 
     private FloatingActionButton fabCreateMessage;
@@ -41,14 +40,28 @@ public class HomeActivity extends AppCompatActivity {
         initAuth();
         initViews();
 
-        tabLayout.addTab(tabLayout.newTab().setText("Chats"));
-        tabLayout.addTab(tabLayout.newTab().setText("Status"));
+        pagerAdapter = new HomePagerAdapter(this);
+        pagerHome.setAdapter(pagerAdapter);
+
+        new TabLayoutMediator(tabLayout, pagerHome, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Chats");
+                    break;
+                case 1:
+                    tab.setText("Status");
+                    break;
+                default:
+                    break;
+            }
+        }).attach();
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int currPos = tab.getPosition();
                 Log.d(TAG, "inside onTabSelection: tab position = "+currPos);
-                viewPager.setCurrentItem(currPos);
+                pagerHome.setCurrentItem(currPos);
             }
 
             @Override
@@ -62,18 +75,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        pagerAdapter = new HomePagerAdapter(this);
-        viewPager.setAdapter(pagerAdapter);
-
         fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(mUser == null){
-            Toast.makeText(this, "User is null - Something went wrong", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -84,10 +86,10 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
+        if (pagerHome.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+            pagerHome.setCurrentItem(pagerHome.getCurrentItem() - 1);
         }
     }
 
@@ -95,14 +97,13 @@ public class HomeActivity extends AppCompatActivity {
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
         editAuthPref = authPref.edit();
         mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
 
         mAuth.addAuthStateListener(this::onAuthStateChanged);
     }
 
     private void initViews() {
         fabCreateMessage = findViewById(R.id.fabCreateMessage);
-        viewPager = findViewById(R.id.pagerHome);
+        pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
 
     }
