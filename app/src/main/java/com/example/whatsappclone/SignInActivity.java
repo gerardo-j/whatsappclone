@@ -38,14 +38,17 @@ public class SignInActivity extends AppCompatActivity {
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
         editAuthPref = authPref.edit();
 
+        initViews();
+        setClickListener();
+    }
+
+    private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         btnSignIn = findViewById(R.id.btnSignOut);
         txtForgotPassword = findViewById(R.id.txtForgotPassword);
         txtRegister = findViewById(R.id.txtSignIn);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         editTxtPassword = findViewById(R.id.editTxtPassword);
-
-        setClickListener();
     }
 
     private void setClickListener() {

@@ -77,6 +77,8 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
+
+
     }
 
     @Override
@@ -117,7 +119,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
         } else {
-            auth.getCurrentUser().reload();
             Log.d(TAG, "AUTH changed, authed = true");
         }
     }

@@ -126,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (updateDatabaseTask.isSuccessful()) {
                                     editAuthPref.putBoolean("isAuth", true);
                                     editAuthPref.apply();
-                                    startActivity(new Intent(this, SplashActivity.class));
+                                    startActivity(new Intent(this, HomeActivity.class));
                                     finish();
                                 } else {
                                     Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
