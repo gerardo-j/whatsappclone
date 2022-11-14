@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.whatsappclone.Utils.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -118,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Profile create failed", Toast.LENGTH_SHORT).show();
                             });
 
-                        FirebaseDatabase.getInstance().getReference("user")
+                        FirebaseDatabase.getInstance().getReference(User.class.getSimpleName())
                             .child(currentUser.getUid())
                             .setValue(user)
                             .addOnCompleteListener(updateDatabaseTask -> {
