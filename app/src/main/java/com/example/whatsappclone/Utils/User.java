@@ -1,6 +1,4 @@
-package com.example.whatsappclone;
-
-import com.example.whatsappclone.Utils.MessageChannel;
+package com.example.whatsappclone.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,27 +6,27 @@ import java.util.Map;
 
 public class User {
 
-    private String id, firstName, lastName, email;
+    private String uid, firstName, lastName, email;
     ArrayList<MessageChannel> channels;
 
     public User() {}
 
-    public User(String id, String firstName, String lastName, String email) {
-        this.id = id;
+    public User(String uid, String firstName, String lastName, String email) {
+        this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User(String id, String firstName, String lastName, String email, ArrayList<MessageChannel> channels) {
-        this.id = id;
+    public User(String uid, String firstName, String lastName, String email, ArrayList<MessageChannel> channels) {
+        this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.channels = channels;
     }
 
-    public String getId() { return id; }
+    public String getUid() { return uid; }
 
     public String getFirstName() {
         return firstName;
@@ -44,7 +42,7 @@ public class User {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("id", id);
+        result.put("id", uid);
         result.put("firstName", firstName);
         result.put("lastName", lastName);
         result.put("email", email);
