@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/storyUser"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="username with profile picture"/>
+
+        <ImageView
+            android:id="@+id/storyPost"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:src="@android:drawable/btn_star"/>
+
+        <TextView
+            android:id="@+id/storyDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="My post"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
