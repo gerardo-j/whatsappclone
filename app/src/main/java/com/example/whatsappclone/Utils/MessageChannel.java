@@ -14,7 +14,6 @@ public class MessageChannel {
         this.messages = messages;
     }
 
-
     public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
