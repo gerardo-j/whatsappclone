@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.whatsappclone.Utils.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -105,21 +106,20 @@ public class RegisterActivity extends AppCompatActivity {
             .addOnCompleteListener(createUserTask -> {
                 if (createUserTask.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
-                    User user = new User(firstName, lastName, email);
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     if (currentUser != null) {
+                        User user = new User(currentUser.getUid(), firstName, lastName, email);
                         String displayName = firstName + ' ' + lastName;
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(displayName)
                             .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
                             .build();
                         currentUser.updateProfile(profileUpdates)
-                            .addOnCompleteListener(updateProfileTask -> {
-                                if (!updateProfileTask.isSuccessful())
-                                    Toast.makeText(this, "Profile create failed", Toast.LENGTH_SHORT).show();
+                            .addOnSuccessListener(updateProfileTask -> {
+                                Toast.makeText(this, "Profile create failed", Toast.LENGTH_SHORT).show();
                             });
 
-                        FirebaseDatabase.getInstance().getReference("user")
+                        FirebaseDatabase.getInstance().getReference(User.class.getSimpleName())
                             .child(currentUser.getUid())
                             .setValue(user)
                             .addOnCompleteListener(updateDatabaseTask -> {
