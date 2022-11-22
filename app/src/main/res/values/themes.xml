@@ -12,5 +12,13 @@
 <!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
 <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
 <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+
+    </style>
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#009688</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#009688</item>
     </style>
 </resources>

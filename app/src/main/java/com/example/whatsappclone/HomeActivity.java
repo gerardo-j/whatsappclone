@@ -1,28 +1,38 @@
 package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "HomeActivity";
 
     private SharedPreferences authPref;
     private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
+    private DatabaseReference RootRef;
 
     private TabLayout tabLayout;
     private ViewPager2 pagerHome;
@@ -40,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
 
         pagerAdapter = new HomePagerAdapter(this);
         pagerHome.setAdapter(pagerAdapter);
-
+        RootRef = FirebaseDatabase.getInstance().getReference();
         tabLayout.setTabIndicatorFullWidth(true);
         new TabLayoutMediator(tabLayout, pagerHome, (tab, position) -> {
             switch (position) {
@@ -135,7 +145,62 @@ public class HomeActivity extends AppCompatActivity {
             mAuth.signOut();
             return true;
         }
+        if (item.getItemId() == R.id.createGroup) {
+            createGroupRequest();
+            return true;
+        }
+        // add create chat
         return super.onOptionsItemSelected(item);
     }
 
+    private void createGroupRequest()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter Group Name :");
+
+        final EditText groupNameField = new EditText(HomeActivity.this);
+        groupNameField.setHint("e.g Group Name");
+        builder.setView(groupNameField);
+
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                String groupName = groupNameField.getText().toString();
+
+                if (TextUtils.isEmpty(groupName))
+                {
+                    Toast.makeText(HomeActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    createGroupRequest(groupName);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+
+}
+
+    private void createGroupRequest(final String groupName) {
+        RootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                {
+                    Toast.makeText(HomeActivity.this, groupName + " group is Created Successfully...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

@@ -17,5 +17,6 @@
     <color name="offWhite_200">#F2E9E4</color>
     <color name="offWhite_400">#C9ADA7</color>
     <color name="offWhite_600">#9A8C98</color>
+    <color name="colorPrimary">#009688</color>
 
 </resources>
