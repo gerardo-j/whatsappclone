@@ -16,8 +16,29 @@
         android:layout_margin="16dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/ic_baseline_message_32"
+        app:srcCompat="@android:drawable/ic_menu_add"
+
         android:contentDescription="Send a new message" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCreateConvo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fabCreateMessage"
+        android:layout_alignStart="@+id/fabCreateMessage"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPostStory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fabCreateConvo"
+        android:layout_alignStart="@+id/fabCreateConvo"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutHome"

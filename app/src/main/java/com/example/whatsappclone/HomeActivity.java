@@ -3,17 +3,21 @@ package com.example.whatsappclone;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,7 +42,10 @@ public class HomeActivity extends AppCompatActivity {
     private ViewPager2 pagerHome;
     private FragmentStateAdapter pagerAdapter;
 
+    private boolean isAllFABVisible;
     private FloatingActionButton fabCreateMessage;
+    private FloatingActionButton fabCreateConvo;
+    private FloatingActionButton fabPostStory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
+        //fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
     }
 
     @Override
@@ -112,6 +119,37 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initViews() {
         fabCreateMessage = findViewById(R.id.fabCreateMessage);
+        fabCreateConvo = findViewById(R.id.fabCreateConvo);
+        fabPostStory = findViewById(R.id.fabPostStory);
+
+        fabCreateConvo.setVisibility(View.GONE);
+        fabPostStory.setVisibility(View.GONE);
+
+        isAllFABVisible = false;
+
+        Resources res = this.getResources();
+        Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable.minus_sign, null);
+        fabCreateMessage.setImageDrawable(minusImage);
+        fabCreateMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isAllFABVisible){
+                    fabCreateConvo.show();
+                    fabPostStory.show();
+                    isAllFABVisible = true;
+                    //fabCreateMessage.setImageDrawable(minusImage);
+                }
+                else{
+                    fabPostStory.setVisibility(View.GONE);
+                    fabCreateConvo.setVisibility(View.GONE);
+                    isAllFABVisible = false;
+                    //Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable., null);
+                }
+            }
+        });
+
+        fabCreateConvo.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
+
         pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
 
