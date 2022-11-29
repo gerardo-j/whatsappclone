@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MessageChannel {
 
-    private String name, imageUrl;
+    private String id, name, imageUrl;
     private ArrayList<User> users;
     private ArrayList<Message> messages;
 
@@ -22,6 +22,8 @@ public class MessageChannel {
         this.messages = messages;
     }
 
+    public String getId() { return id; }
+
     public String getName() {
         return name;
     }
@@ -33,6 +35,8 @@ public class MessageChannel {
     public ArrayList<User> getUsers() { return users; }
 
     public ArrayList<Message> getMessages() { return messages; }
+
+    public void setId(String id) { this.id = id; }
 
     public void setName(String name) {
         this.name = name;
