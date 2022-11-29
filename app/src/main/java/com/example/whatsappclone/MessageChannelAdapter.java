@@ -62,7 +62,9 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
 
         @Override
         public void onClick(View view) {
-            context.startActivity(new Intent(context, MessageChannelActivity.class));
+            Intent messageChannelIntent = new Intent(context, MessageChannelActivity.class);
+            messageChannelIntent.putExtra("groupName", txtChannelName.getText().toString());
+            context.startActivity(messageChannelIntent);
         }
     }
 }

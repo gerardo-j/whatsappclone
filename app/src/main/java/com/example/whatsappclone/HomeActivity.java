@@ -7,7 +7,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,8 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.whatsappclone.Utils.MessageChannel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -36,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
     private SharedPreferences authPref;
     private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef;
+    private DatabaseReference MessageChannelRef;
 
     private TabLayout tabLayout;
     private ViewPager2 pagerHome;
@@ -57,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
         pagerAdapter = new HomePagerAdapter(this);
         pagerHome.setAdapter(pagerAdapter);
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        MessageChannelRef = FirebaseDatabase.getInstance().getReference(MessageChannel.class.getSimpleName());
         tabLayout.setTabIndicatorFullWidth(true);
         new TabLayoutMediator(tabLayout, pagerHome, (tab, position) -> {
             switch (position) {
@@ -191,54 +189,31 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void createGroupRequest()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialog);
-        builder.setTitle("Enter Group Name :");
-
+    private void createGroupRequest() {
         final EditText groupNameField = new EditText(HomeActivity.this);
         groupNameField.setHint("e.g Group Name");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, com.google.android.material.R.style.Theme_Material3_DynamicColors_DayNight);
+        builder.setTitle("Enter Group Name :");
         builder.setView(groupNameField);
+        builder.setPositiveButton("Create", (dialogInterface, i) -> {
+            String groupName = groupNameField.getText().toString();
 
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                String groupName = groupNameField.getText().toString();
-
-                if (TextUtils.isEmpty(groupName))
-                {
-                    Toast.makeText(HomeActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    createGroupRequest(groupName);
-                }
+            if (TextUtils.isEmpty(groupName)) {
+                Toast.makeText(HomeActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+            } else {
+                createGroupRequest(groupName);
             }
         });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                dialogInterface.cancel();
-            }
-        });
-
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.show();
-
 }
 
     private void createGroupRequest(final String groupName) {
-        RootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if (task.isSuccessful())
-                {
-                    Toast.makeText(HomeActivity.this, groupName + " group is Created Successfully...", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        MessageChannel temp = new MessageChannel();
+        temp.setName(groupName);
+        MessageChannelRef.child(groupName).setValue(temp).addOnSuccessListener(taskResult ->
+                Toast.makeText(HomeActivity.this, groupName + " group is Created Successfully...", Toast.LENGTH_SHORT).show()
+        );
     }
 }
