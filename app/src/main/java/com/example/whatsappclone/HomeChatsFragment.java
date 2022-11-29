@@ -6,12 +6,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.whatsappclone.Utils.MessageChannel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,29 +22,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeChatsFragment extends Fragment {
+    private static final String TAG = HomeChatsFragment.class.getSimpleName();
+
     private View groupFragmentView;
     private ListView list_view;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> list_of_groups = new ArrayList<>();
 
-    private DatabaseReference GroupRef;
+    private DatabaseReference MessageChannelRef;
 
-    public HomeChatsFragment() {
-        // Required empty public constructor
-    }
+    public HomeChatsFragment() {} // Required empty public constructor
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         groupFragmentView = inflater.inflate(R.layout.fragment_home_chats, container, false);
-        GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+        MessageChannelRef = FirebaseDatabase.getInstance().getReference(MessageChannel.class.getSimpleName());
 
         InitializeFields();
         RetrieveAndDisplayGroups();
@@ -62,22 +64,23 @@ public class HomeChatsFragment extends Fragment {
 
     private void InitializeFields() {
         list_view = (ListView) groupFragmentView.findViewById(R.id.list_view);
-        arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list_of_groups);
+        arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list_of_groups);
         list_view.setAdapter(arrayAdapter);
     }
 
     private void RetrieveAndDisplayGroups() {
-        GroupRef.addValueEventListener(new ValueEventListener() {
+        Log.d(TAG, "RetrieveAndDisplayGroups()");
+        MessageChannelRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Set<String> set = new HashSet<>();
-
+//                Set<String> set = new HashSet<>();
+                list_of_groups.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    set.add(snapshot.getKey());
+                    list_of_groups.add(Objects.requireNonNull(snapshot.getValue(MessageChannel.class)).getName());
                 }
 
-                list_of_groups.clear();
-                list_of_groups.addAll(set);
+//                list_of_groups.clear();
+//                list_of_groups.addAll(set);
                 arrayAdapter.notifyDataSetChanged();
             }
 
