@@ -147,6 +147,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         fabCreateConvo.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
+        fabPostStory.setOnClickListener(view -> startActivity(new Intent(this, PostStatusActivity.class)));
 
         pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
