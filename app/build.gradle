@@ -43,6 +43,9 @@ dependencies {
     // Skip this if you don't want to use integration libraries or configure Glide.
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
+    //wong_sherpa 
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.0.1')
     // The dependencies for Firebase products

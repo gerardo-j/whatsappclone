@@ -1,70 +1,213 @@
 package com.example.whatsappclone;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.SharedPreferences;
+//wong sherpa
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
+import com.example.whatsappclone.databinding.SettingsActivityBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String TAG = "SettingsActivity";
+    ImageView plus;
+    ImageView profileImage;
+    Button updateBtn;
 
-    private SharedPreferences authPref;
-    SharedPreferences.Editor editAuthPref;
-    FirebaseAuth mAuth;
-    FirebaseUser mUser;
-
-    private ImageView imageProfile;
-    private TextView txtProfileName, txtProfileEmail;
-    private Button btnDeleteUser;
+    SettingsActivityBinding binding;
+    FirebaseAuth auth;
+    FirebaseStorage storage;
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Settings");
-        }
+        // setContentView(R.layout.settings_activity);
+        binding = DataBindingUtil.setContentView(this, R.layout.settings_activity);
+        // setContentView(binding.getRoot());
+        getSupportActionBar().hide();
 
-        authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
-        editAuthPref = authPref.edit();
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
+        storage = FirebaseStorage.getInstance();
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        initViews();
+        binding.backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        Glide.with(this)
-            .load(mUser.getPhotoUrl())
-            .error(R.drawable.default_profile_icon)
-            .into(imageProfile);
-        txtProfileName.setText(mUser.getDisplayName());
-        txtProfileEmail.setText(mUser.getEmail());
-        btnDeleteUser.setOnClickListener(view -> deleteUser());
-    }
+        binding.updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!binding.aboutMe.getText().toString().equals("")
+                        && !binding.userName.getText().toString().equals("")) {
+                    String status = binding.aboutMe.getText().toString();
+                    String username = binding.userName.getText().toString();
 
-    private void initViews() {
-        imageProfile = findViewById(R.id.imageProfile);
-        txtProfileName = findViewById(R.id.txtProfileName);
-        txtProfileEmail = findViewById(R.id.txtProfileEmail);
-        btnDeleteUser = findViewById(R.id.btnDeleteUser);
-    }
+                    HashMap<String, Object> obj = new HashMap<>();
+                    obj.put("userName", username);
+                    obj.put("status", status);
 
-    private void deleteUser() {
-        mUser.delete()
-            .addOnCompleteListener(deleteUserTask -> {
-                if (deleteUserTask.isSuccessful()) {
-                    finish();
+                    database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                            .updateChildren(obj);
+
+                    Toast.makeText(SettingsActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+
                 } else {
-                    Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "Please enter username and bio", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users = snapshot.getValue(Users.class);
+                        Picasso.get()
+                                .load(users.getProfilePic())
+                                .placeholder(R.drawable.profileImage)
+                                .into(binding.profileImage);
+
+                        binding.aboutMe.setText(users.getStatus());
+                        binding.userName.setText(users.getUsername());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        // we can use grade
+
+        binding.plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 20);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data.getData() != null) {
+            Uri sFile = data.getData();
+            binding.profileImage.setImageURI(sFile);
+            final StorageReference reference = storage.getReference().child("profile_img")
+                    .child(FirebaseAuth.getInstance().getUid());
+
+            reference.putFile(sFile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                                    .child("profilePic").setValue(uri.toString());
+                        }
+                    });
+
                 }
             });
+        }
     }
-
 }
+
+/*
+ * import androidx.appcompat.app.AppCompatActivity;
+ * 
+ * import android.content.SharedPreferences;
+ * import android.os.Bundle;
+ * import android.widget.Button;
+ * import android.widget.ImageView;
+ * import android.widget.TextView;
+ * import android.widget.Toast;
+ * 
+ * import com.bumptech.glide.Glide;
+ * import com.google.firebase.auth.FirebaseAuth;
+ * import com.google.firebase.auth.FirebaseUser;
+ * 
+ * public class SettingsActivity extends AppCompatActivity {
+ * private static final String TAG = "SettingsActivity";
+ * 
+ * private SharedPreferences authPref;
+ * SharedPreferences.Editor editAuthPref;
+ * FirebaseAuth mAuth;
+ * FirebaseUser mUser;
+ * 
+ * private ImageView imageProfile;
+ * private TextView txtProfileName, txtProfileEmail;
+ * private Button btnDeleteUser;
+ * 
+ * @Override
+ * protected void onCreate(Bundle savedInstanceState) {
+ * super.onCreate(savedInstanceState);
+ * setContentView(R.layout.activity_settings);
+ * if (getSupportActionBar() != null) {
+ * getSupportActionBar().setTitle("Settings");
+ * }
+ * 
+ * authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
+ * editAuthPref = authPref.edit();
+ * mAuth = FirebaseAuth.getInstance();
+ * mUser = mAuth.getCurrentUser();
+ * 
+ * initViews();
+ * 
+ * Glide.with(this)
+ * .load(mUser.getPhotoUrl())
+ * .error(R.drawable.default_profile_icon)
+ * .into(imageProfile);
+ * txtProfileName.setText(mUser.getDisplayName());
+ * txtProfileEmail.setText(mUser.getEmail());
+ * btnDeleteUser.setOnClickListener(view -> deleteUser());
+ * }
+ * 
+ * private void initViews() {
+ * imageProfile = findViewById(R.id.imageProfile);
+ * txtProfileName = findViewById(R.id.txtProfileName);
+ * txtProfileEmail = findViewById(R.id.txtProfileEmail);
+ * btnDeleteUser = findViewById(R.id.btnDeleteUser);
+ * }
+ * 
+ * private void deleteUser() {
+ * mUser.delete()
+ * .addOnCompleteListener(deleteUserTask -> {
+ * if (deleteUserTask.isSuccessful()) {
+ * finish();
+ * } else {
+ * Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show();
+ * }
+ * });
+ * }
+ * 
+ * }
+ */
