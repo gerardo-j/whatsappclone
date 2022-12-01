@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class User {
 
-    private String uid, firstName, lastName, email;
+    private String uid, firstName, lastName, email, profileImage;
     ArrayList<MessageChannel> channels;
 
     public User() {}
@@ -24,6 +24,14 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.channels = channels;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public String getUid() { return uid; }
