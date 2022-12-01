@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 //import com.example.whatsappclone.Models.Users;
+import com.bumptech.glide.Glide;
+import com.example.whatsappclone.Utils.User;
 import com.example.whatsappclone.databinding.SettingsActivityBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding.backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                Intent intent = new Intent(SettingsActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });
@@ -95,14 +97,20 @@ public class SettingsActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Users users = snapshot.getValue(Users.class);
-                        Picasso.get()
-                                .load(users.getProfilePic())
-                                .placeholder(R.drawable.img)
+                        User users = snapshot.getValue(User.class);
+                        Glide.with(binding.profileImage)
+                                .load(users.getProfileImage())
+                                .error(R.drawable.default_profile_icon)
                                 .into(binding.profileImage);
+//                        assert users != null;
+//                        Picasso.get()
+//                                .load(users.getProfileImage())
+//                                .placeholder(R.drawable.img)
+//                                .error(R.drawable.img)
+//                                .into(binding.profileImage);
 
-                        binding.aboutMe.setText(users.getStatus());
-                        binding.userName.setText(users.getUserName());
+//                        binding.aboutMe.setText(users.getUid());
+//                        binding.userName.setText(users.getFirstName());
                     }
 
                     @Override
