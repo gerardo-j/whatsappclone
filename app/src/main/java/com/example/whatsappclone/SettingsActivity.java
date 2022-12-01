@@ -97,11 +97,12 @@ public class SettingsActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User users = snapshot.getValue(User.class);
-                        Glide.with(binding.profileImage)
-                                .load(users.getProfileImage())
-                                .error(R.drawable.default_profile_icon)
-                                .into(binding.profileImage);
+                        User user = snapshot.getValue(User.class);
+//                       TODO: Fix this
+//                        Glide.with(binding.profileImage)
+//                                .load(users.getProfileImage())
+//                                .error(R.drawable.default_profile_icon)
+//                                .into(binding.profileImage);
 //                        assert users != null;
 //                        Picasso.get()
 //                                .load(users.getProfileImage())
