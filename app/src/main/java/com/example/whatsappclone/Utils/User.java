@@ -6,10 +6,15 @@ import java.util.Map;
 
 public class User {
 
-    private String uid, firstName, lastName, email, profileImage;
-    ArrayList<MessageChannel> channels;
+    private String uid, username, firstName, lastName, email, profileImage;
+    private ArrayList<MessageChannel> channels;
 
     public User() {}
+
+    public User(String uid, String username) {
+        this.uid = uid;
+        this.username = username;
+    }
 
     public User(String uid, String firstName, String lastName, String email) {
         this.uid = uid;
@@ -46,6 +51,38 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ArrayList<MessageChannel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(ArrayList<MessageChannel> channels) {
+        this.channels = channels;
     }
 
     public Map<String, Object> toMap() {
