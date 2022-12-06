@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -18,12 +17,8 @@ import android.widget.Toast;
 import com.example.whatsappclone.Utils.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
@@ -37,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btnSignIn;
     private TextView txtLogin;
-    private EditText editTxtUsername, editTxtEmail, editTxtPassword, editTxtFirstName, editTxtLastName;
+    private EditText editTxtUsername, editTxtEmail, editTxtPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         btnSignIn = findViewById(R.id.btnSignOut);
         txtLogin = findViewById(R.id.txtSignIn);
-        editTxtFirstName = findViewById(R.id.editTxtFirstName);
-        editTxtLastName = findViewById(R.id.editTxtLastName);
         editTxtUsername = findViewById(R.id.editTxtUsername);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         editTxtPassword = findViewById(R.id.editTxtPassword);
@@ -72,22 +65,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser() {
         Log.d(TAG, "Register");
 
-        String firstName = editTxtFirstName.getText().toString().trim();
-        String lastName = editTxtLastName.getText().toString().trim();
         String username = editTxtUsername.getText().toString().trim();
         String email = editTxtEmail.getText().toString().trim();
         String password = editTxtPassword.getText().toString().trim();
 
-        if (firstName.isEmpty()) {
-            editTxtFirstName.setError("First name is required");
-            editTxtFirstName.requestFocus();
-            return;
-        }
-        if (lastName.isEmpty()) {
-            editTxtLastName.setError("Last name is required");
-            editTxtLastName.requestFocus();
-            return;
-        }
         if (username.isEmpty()) {
             editTxtUsername.setError("Username is required");
             editTxtUsername.requestFocus();
@@ -131,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             // Sign in success, update UI with the signed-in user's information
                                             FirebaseUser currentUser = mAuth.getCurrentUser();
                                             if (currentUser != null) {
-                                                User user = new User(currentUser.getUid(), username, firstName, lastName, email);
+                                                User user = new User(currentUser.getUid(), username, email);
 //                                                String displayName = firstName + ' ' + lastName;
 //                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                                                        .setDisplayName(displayName)

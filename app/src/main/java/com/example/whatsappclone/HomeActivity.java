@@ -136,7 +136,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-
         pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
     }

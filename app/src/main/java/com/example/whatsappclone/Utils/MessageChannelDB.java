@@ -32,7 +32,7 @@ public class MessageChannelDB {
     public Task<Void> update() {
         String key = databaseReference.push().getKey();
 
-        User user = new User("d", "custom_username", "userId", "username", "ggg@test.com");
+        User user = new User("uid", "custom_username", "test@test.com");
         Map<String, Object> postValues = user.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

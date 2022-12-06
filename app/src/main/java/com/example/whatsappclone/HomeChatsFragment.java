@@ -83,7 +83,7 @@ public class HomeChatsFragment extends Fragment {
     private void loadChannels() {
         channels.clear();
 
-        ArrayList<User> users = new ArrayList<>(Arrays.asList(new User(mUser.getUid(),"username1", "User 1 First Name", "User 1 Last Name", "test@test.com"),new User(mUser.getUid(), "username2","User 2 First Name", "User 2 Last Name", "test@test.com")));
+        ArrayList<User> users = new ArrayList<>(Arrays.asList(new User(mUser.getUid(), "username1", "test@test.com"),new User(mUser.getUid(), "username2", "test@test.com")));
         ArrayList<Message> messages = new ArrayList<>(Arrays.asList(new Message(mUser.getUid(),"Message 1"), new Message(mUser.getUid(),"Message 2")));
         channels.add(new MessageChannel("Test Channel, Locally created", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png", users, messages));
 
@@ -107,7 +107,7 @@ public class HomeChatsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e(TAG, error.getMessage());
             }
         };
 

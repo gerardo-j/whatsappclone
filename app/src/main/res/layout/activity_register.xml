@@ -13,44 +13,10 @@
         android:text="Messaging app"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txtSignInDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register an account"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/txtSignInHeading"
-        app:layout_constraintStart_toStartOf="@+id/txtSignInHeading"
-        app:layout_constraintTop_toBottomOf="@+id/txtSignInHeading" />
-
-    <EditText
-        android:id="@+id/editTxtFirstName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="First Name"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/txtSignInDescription"
-        app:layout_constraintStart_toStartOf="@+id/txtSignInDescription"
-        app:layout_constraintTop_toBottomOf="@+id/txtSignInDescription"
-        android:autofillHints="first name" />
-
-    <EditText
-        android:id="@+id/editTxtLastName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="Last Name"
-        app:layout_constraintEnd_toEndOf="@+id/editTxtFirstName"
-        app:layout_constraintStart_toStartOf="@+id/editTxtFirstName"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtFirstName" />
 
     <EditText
         android:id="@+id/editTxtUsername"
@@ -59,9 +25,9 @@
         android:ems="10"
         android:inputType="text"
         android:hint="Username"
-        app:layout_constraintEnd_toEndOf="@+id/editTxtLastName"
-        app:layout_constraintStart_toStartOf="@+id/editTxtLastName"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtLastName"
+        app:layout_constraintEnd_toEndOf="@+id/txtSignInHeading"
+        app:layout_constraintStart_toStartOf="@+id/txtSignInHeading"
+        app:layout_constraintTop_toBottomOf="@+id/txtSignInHeading"
         android:autofillHints="username" />
 
     <EditText
