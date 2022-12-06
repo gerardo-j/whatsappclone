@@ -16,14 +16,14 @@ public class User {
         this.username = username;
     }
 
-    public User(String uid, String firstName, String lastName, String email) {
+    public User(String uid, String username, String firstName, String lastName, String email) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User(String uid, String firstName, String lastName, String email, ArrayList<MessageChannel> channels) {
+    public User(String uid, String username, String firstName, String lastName, String email, ArrayList<MessageChannel> channels) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
