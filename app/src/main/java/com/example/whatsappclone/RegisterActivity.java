@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private static final String DEFAULT_PROFILE_IMAGE = "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png";
@@ -74,7 +76,6 @@ public class RegisterActivity extends AppCompatActivity {
             editTxtUsername.requestFocus();
             return;
         }
-        Log.d(TAG, "continuing");
         if (email.isEmpty()) {
             editTxtEmail.setError("Email is required");
             editTxtEmail.requestFocus();
@@ -105,14 +106,14 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.d(TAG, getUsernamesTasks.getResult().getId() + " => " + getUsernamesTasks.getResult().getData());
 
                         if (getUsernamesTasks.getResult().getData() == null) {
-                            Log.d(TAG, "username not found");
+                            Log.d(TAG, "username not found... creating new user");
                             mAuth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(createUserTask -> {
                                         if (createUserTask.isSuccessful()) {
                                             // Sign in success, update UI with the signed-in user's information
                                             FirebaseUser currentUser = mAuth.getCurrentUser();
                                             if (currentUser != null) {
-                                                User user = new User(currentUser.getUid(), username, email);
+                                                User user = new User(currentUser.getUid(), username, email, DEFAULT_PROFILE_IMAGE);
 //                                                String displayName = firstName + ' ' + lastName;
 //                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                                                        .setDisplayName(displayName)
@@ -120,6 +121,10 @@ public class RegisterActivity extends AppCompatActivity {
 //                                                        .build();
 //                                                currentUser.updateProfile(profileUpdates);
 
+                                                HashMap<String, Object> result = new HashMap<>();
+                                                result.put("uid", user.getUid());
+                                                mFirestore.collection("usernames").document(username)
+                                                        .set(result);
                                                 FirebaseDatabase.getInstance().getReference(User.class.getSimpleName())
                                                         .child(currentUser.getUid())
                                                         .setValue(user)
@@ -130,7 +135,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                                 startActivity(new Intent(this, HomeActivity.class));
                                                                 finish();
                                                             } else {
-                                                                Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
+                                                                Log.d(TAG, "updateDatabaseTask() failed");
+                                                                Toast.makeText(this, "Failed to create user Realtime DB", Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                             }
