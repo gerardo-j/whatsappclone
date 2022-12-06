@@ -124,26 +124,22 @@ public class HomeActivity extends AppCompatActivity {
 
         fabCreateConvo.setVisibility(View.GONE);
         fabPostStory.setVisibility(View.GONE);
-
         isAllFABVisible = false;
 
         Resources res = this.getResources();
         Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable.minus_sign, null);
         fabCreateMessage.setImageDrawable(minusImage);
-        fabCreateMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isAllFABVisible){
-                    fabCreateConvo.show();
-                    fabPostStory.show();
-                    isAllFABVisible = true;
-                    //fabCreateMessage.setImageDrawable(minusImage);
-                } else{
-                    fabPostStory.setVisibility(View.GONE);
-                    fabCreateConvo.setVisibility(View.GONE);
-                    isAllFABVisible = false;
-                    //Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable., null);
-                }
+        fabCreateMessage.setOnClickListener(view -> {
+            if(!isAllFABVisible){
+                fabCreateConvo.show();
+                fabPostStory.show();
+                isAllFABVisible = true;
+                //fabCreateMessage.setImageDrawable(minusImage);
+            } else{
+                fabPostStory.setVisibility(View.GONE);
+                fabCreateConvo.setVisibility(View.GONE);
+                isAllFABVisible = false;
+                //Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable., null);
             }
         });
 
@@ -180,10 +176,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.menuItemSignOut) {
             mAuth.signOut();
-            return true;
-        }
-        if (item.getItemId() == R.id.createGroup) {
-            startActivity(new Intent(this, CreateMessageActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
