@@ -1,38 +1,23 @@
 package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.whatsappclone.Utils.MessageChannel;
-import com.example.whatsappclone.Utils.MessageChannelDB;
-import com.example.whatsappclone.Utils.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
@@ -46,9 +31,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentStateAdapter pagerAdapter;
 
     private boolean isAllFABVisible;
-    private FloatingActionButton fabCreateMessage;
-    private FloatingActionButton fabCreateConvo;
-    private FloatingActionButton fabPostStory;
+    private FloatingActionButton fabQuickActions, fabCreateGroup, fabPostStory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         initAuth();
+        initFab();
         initViews();
 
         pagerAdapter = new HomePagerAdapter(this);
@@ -117,34 +101,41 @@ public class HomeActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(this::onAuthStateChanged);
     }
 
-    private void initViews() {
-        fabCreateMessage = findViewById(R.id.fabCreateMessage);
-        fabCreateConvo = findViewById(R.id.fabCreateConvo);
+    private void initFab() {
+        fabQuickActions = findViewById(R.id.fabQuickActions);
+        fabCreateGroup = findViewById(R.id.fabCreateGroup);
         fabPostStory = findViewById(R.id.fabPostStory);
 
-        fabCreateConvo.setVisibility(View.GONE);
+        fabCreateGroup.setVisibility(View.GONE);
         fabPostStory.setVisibility(View.GONE);
         isAllFABVisible = false;
 
-        Resources res = this.getResources();
-        Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable.minus_sign, null);
-        fabCreateMessage.setImageDrawable(minusImage);
-        fabCreateMessage.setOnClickListener(view -> {
-            if(!isAllFABVisible){
-                fabCreateConvo.show();
-                fabPostStory.show();
-                isAllFABVisible = true;
-                //fabCreateMessage.setImageDrawable(minusImage);
-            } else{
-                fabPostStory.setVisibility(View.GONE);
-                fabCreateConvo.setVisibility(View.GONE);
-                isAllFABVisible = false;
-                //Drawable minusImage = ResourcesCompat.getDrawable(res, R.drawable., null);
-            }
+        fabCreateGroup.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, CreateMessageActivity.class);
+            startActivity(intent);
         });
 
-        fabCreateConvo.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
-        fabPostStory.setOnClickListener(view -> startActivity(new Intent(this, PostStatusActivity.class)));
+        fabPostStory.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, PostStatusActivity.class);
+            startActivity(intent);
+        });
+
+        fabQuickActions.setOnClickListener(view -> {
+            if (!isAllFABVisible) {
+                fabCreateGroup.show();
+                fabPostStory.show();
+                isAllFABVisible = true;
+                fabQuickActions.setImageResource(R.drawable.ic_baseline_close_24);
+            } else{
+                fabPostStory.setVisibility(View.GONE);
+                fabCreateGroup.setVisibility(View.GONE);
+                isAllFABVisible = false;
+                fabQuickActions.setImageResource(R.drawable.ic_baseline_add_24);
+            }
+        });
+    }
+
+    private void initViews() {
 
         pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
