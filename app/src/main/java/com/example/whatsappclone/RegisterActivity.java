@@ -20,18 +20,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
+    private static final String DEFAULT_PROFILE_IMAGE = "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png";
 
     private SharedPreferences authPref;
-    SharedPreferences.Editor editAuthPref;
+    private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
 
     private ProgressBar progressBar;
     private Button btnSignIn;
     private TextView txtLogin;
-    private EditText editTxtEmail, editTxtPassword, editTxtFirstName, editTxtLastName;
+    private EditText editTxtUsername, editTxtEmail, editTxtPassword, editTxtFirstName, editTxtLastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         authPref = getSharedPreferences(SplashActivity.AUTH_PREF_NAME, MODE_PRIVATE);
         editAuthPref = authPref.edit();
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
 
         initViews();
         setClickListener();
@@ -52,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         txtLogin = findViewById(R.id.txtSignIn);
         editTxtFirstName = findViewById(R.id.editTxtFirstName);
         editTxtLastName = findViewById(R.id.editTxtLastName);
+        editTxtUsername = findViewById(R.id.editTxtUsername);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         editTxtPassword = findViewById(R.id.editTxtPassword);
     }
@@ -66,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String firstName = editTxtFirstName.getText().toString().trim();
         String lastName = editTxtLastName.getText().toString().trim();
+        String username = editTxtUsername.getText().toString().trim();
         String email = editTxtEmail.getText().toString().trim();
         String password = editTxtPassword.getText().toString().trim();
 
@@ -79,6 +88,12 @@ public class RegisterActivity extends AppCompatActivity {
             editTxtLastName.requestFocus();
             return;
         }
+        if (username.isEmpty()) {
+            editTxtUsername.setError("Username is required");
+            editTxtUsername.requestFocus();
+            return;
+        }
+        Log.d(TAG, "continuing");
         if (email.isEmpty()) {
             editTxtEmail.setError("Email is required");
             editTxtEmail.requestFocus();
@@ -102,44 +117,58 @@ public class RegisterActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(createUserTask -> {
-                if (createUserTask.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    if (currentUser != null) {
-                        User user = new User(currentUser.getUid(), firstName, lastName, email);
-                        String displayName = firstName + ' ' + lastName;
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(displayName)
-                            .setPhotoUri(Uri.parse("https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png"))
-                            .build();
-                        currentUser.updateProfile(profileUpdates)
-                            .addOnSuccessListener(updateProfileTask -> {
-                                Toast.makeText(this, "Profile create failed", Toast.LENGTH_SHORT).show();
-                            });
+        mFirestore.collection("usernames").document(username).get()
+                .addOnCompleteListener(getUsernamesTasks -> {
+                    if (getUsernamesTasks.isSuccessful()) {
+                        Log.d(TAG, "getUsernameTasks() successful");
+                        Log.d(TAG, getUsernamesTasks.getResult().getId() + " => " + getUsernamesTasks.getResult().getData());
 
-                        FirebaseDatabase.getInstance().getReference(User.class.getSimpleName())
-                            .child(currentUser.getUid())
-                            .setValue(user)
-                            .addOnCompleteListener(updateDatabaseTask -> {
-                                if (updateDatabaseTask.isSuccessful()) {
-                                    editAuthPref.putBoolean("isAuth", true);
-                                    editAuthPref.apply();
-                                    startActivity(new Intent(this, HomeActivity.class));
-                                    finish();
-                                } else {
-                                    Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        if (getUsernamesTasks.getResult().getData() == null) {
+                            Log.d(TAG, "username not found");
+                            mAuth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(createUserTask -> {
+                                        if (createUserTask.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                                            if (currentUser != null) {
+                                                User user = new User(currentUser.getUid(), username, firstName, lastName, email);
+//                                                String displayName = firstName + ' ' + lastName;
+//                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                                        .setDisplayName(displayName)
+//                                                        .setPhotoUri(Uri.parse(DEFAULT_PROFILE_IMAGE))
+//                                                        .build();
+//                                                currentUser.updateProfile(profileUpdates);
+
+                                                FirebaseDatabase.getInstance().getReference(User.class.getSimpleName())
+                                                        .child(currentUser.getUid())
+                                                        .setValue(user)
+                                                        .addOnCompleteListener(updateDatabaseTask -> {
+                                                            if (updateDatabaseTask.isSuccessful()) {
+                                                                editAuthPref.putBoolean("isAuth", true);
+                                                                editAuthPref.apply();
+                                                                startActivity(new Intent(this, HomeActivity.class));
+                                                                finish();
+                                                            } else {
+                                                                Toast.makeText(this, "DB register failed.", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                            }
+                                        } else {
+                                            Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
+                                        }
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                    });
+                        } else {
+                            Log.d(TAG, "username found");
+                            editTxtUsername.setError("Username already exists");
+                            editTxtUsername.requestFocus();
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    } else {
+                        Log.d(TAG, "getUsernameTasks() failed");
                     }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", createUserTask.getException());
-                    Toast.makeText(this, "Registering failed.", Toast.LENGTH_SHORT).show();
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-            });
+                });
+
     }
 
 }

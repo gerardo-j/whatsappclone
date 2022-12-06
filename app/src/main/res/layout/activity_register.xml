@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="@+id/txtSignInDescription"
         app:layout_constraintStart_toStartOf="@+id/txtSignInDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtSignInDescription"
-        />
+        android:autofillHints="first name" />
 
     <EditText
         android:id="@+id/editTxtLastName"
@@ -53,15 +53,28 @@
         app:layout_constraintTop_toBottomOf="@+id/editTxtFirstName" />
 
     <EditText
+        android:id="@+id/editTxtUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Username"
+        app:layout_constraintEnd_toEndOf="@+id/editTxtLastName"
+        app:layout_constraintStart_toStartOf="@+id/editTxtLastName"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtLastName"
+        android:autofillHints="username" />
+
+    <EditText
         android:id="@+id/editTxtEmailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress"
         android:hint="Email"
-        app:layout_constraintEnd_toEndOf="@+id/editTxtLastName"
-        app:layout_constraintStart_toStartOf="@+id/editTxtLastName"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtLastName" />
+        app:layout_constraintEnd_toEndOf="@+id/editTxtUsername"
+        app:layout_constraintStart_toStartOf="@+id/editTxtUsername"
+        app:layout_constraintTop_toBottomOf="@+id/editTxtUsername"
+        android:autofillHints="emailAddress" />
 
     <EditText
         android:id="@+id/editTxtPassword"
@@ -72,7 +85,8 @@
         android:hint="Password"
         app:layout_constraintEnd_toEndOf="@+id/editTxtEmailAddress"
         app:layout_constraintStart_toStartOf="@+id/editTxtEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/editTxtEmailAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/editTxtEmailAddress"
+        android:autofillHints="password" />
 
 
     <Button
