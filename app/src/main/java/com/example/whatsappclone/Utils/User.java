@@ -21,6 +21,13 @@ public class User {
         this.email = email;
     }
 
+    public User(String uid, String username, String email, String profileImage) {
+        this.uid = uid;
+        this.username = username;
+        this.email = email;
+        this.profileImage = profileImage;
+    }
+
     public User(String uid, String username, String email, ArrayList<MessageChannel> channels) {
         this.uid = uid;
         this.username = username;
