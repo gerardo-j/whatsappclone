@@ -63,9 +63,10 @@ public class CreateMessageActivity extends AppCompatActivity {
         MessageChannel newChannel = new MessageChannel(groupName, receiverUser.getProfileImage(), users);
         messageChannelDB.create(newChannel).addOnFailureListener(createChannelTask ->
                 Toast.makeText(this, groupName + " failed to create", Toast.LENGTH_SHORT).show());
+        finish();
     }
 
     private User findUser(String username) {
-        return new User();
+        return new User("djedied", username);
     }
 }
