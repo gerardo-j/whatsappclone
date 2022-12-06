@@ -15,6 +15,12 @@ public class MessageChannel {
         this.imageUrl = imageUrl;
     }
 
+    public MessageChannel(String name, String imageUrl, ArrayList<User> users) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.users = users;
+    }
+
     public MessageChannel(String name, String imageUrl, ArrayList<User> users, ArrayList<Message> messages) {
         this.name = name;
         this.imageUrl = imageUrl;
