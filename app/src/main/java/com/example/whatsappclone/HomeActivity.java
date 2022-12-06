@@ -21,12 +21,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.whatsappclone.Utils.MessageChannel;
+import com.example.whatsappclone.Utils.MessageChannelDB;
+import com.example.whatsappclone.Utils.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
@@ -34,7 +40,6 @@ public class HomeActivity extends AppCompatActivity {
     private SharedPreferences authPref;
     private SharedPreferences.Editor editAuthPref;
     private FirebaseAuth mAuth;
-    private DatabaseReference MessageChannelRef;
 
     private TabLayout tabLayout;
     private ViewPager2 pagerHome;
@@ -55,7 +60,6 @@ public class HomeActivity extends AppCompatActivity {
 
         pagerAdapter = new HomePagerAdapter(this);
         pagerHome.setAdapter(pagerAdapter);
-        MessageChannelRef = FirebaseDatabase.getInstance().getReference(MessageChannel.class.getSimpleName());
         tabLayout.setTabIndicatorFullWidth(true);
         new TabLayoutMediator(tabLayout, pagerHome, (tab, position) -> {
             switch (position) {
@@ -88,8 +92,6 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
-
-        //fabCreateMessage.setOnClickListener(view -> startActivity(new Intent(this, CreateMessageActivity.class)));
     }
 
     @Override
@@ -136,8 +138,7 @@ public class HomeActivity extends AppCompatActivity {
                     fabPostStory.show();
                     isAllFABVisible = true;
                     //fabCreateMessage.setImageDrawable(minusImage);
-                }
-                else{
+                } else{
                     fabPostStory.setVisibility(View.GONE);
                     fabCreateConvo.setVisibility(View.GONE);
                     isAllFABVisible = false;
@@ -151,7 +152,6 @@ public class HomeActivity extends AppCompatActivity {
 
         pagerHome = findViewById(R.id.pagerHome);
         tabLayout = findViewById(R.id.tabLayoutHome);
-
     }
 
     private void onAuthStateChanged(FirebaseAuth auth) {
@@ -183,38 +183,9 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.createGroup) {
-            createGroupRequest();
+            startActivity(new Intent(this, CreateMessageActivity.class));
             return true;
         }
-        // add create chat
         return super.onOptionsItemSelected(item);
-    }
-
-    private void createGroupRequest() {
-        final EditText groupNameField = new EditText(HomeActivity.this);
-        groupNameField.setHint("e.g Group Name");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this, com.google.android.material.R.style.Theme_Material3_DynamicColors_DayNight);
-        builder.setTitle("Enter Group Name :");
-        builder.setView(groupNameField);
-        builder.setPositiveButton("Create", (dialogInterface, i) -> {
-            String groupName = groupNameField.getText().toString();
-
-            if (TextUtils.isEmpty(groupName)) {
-                Toast.makeText(HomeActivity.this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
-            } else {
-                createGroupRequest(groupName);
-            }
-        });
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
-        builder.show();
-}
-
-    private void createGroupRequest(final String groupName) {
-        MessageChannel temp = new MessageChannel();
-        temp.setName(groupName);
-        MessageChannelRef.child(groupName).setValue(temp).addOnSuccessListener(taskResult ->
-                Toast.makeText(HomeActivity.this, groupName + " group is Created Successfully...", Toast.LENGTH_SHORT).show()
-        );
     }
 }
