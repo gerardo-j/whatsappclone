@@ -97,7 +97,9 @@ public class HomeChatsFragment extends Fragment {
                 Log.d(TAG, snapshot.toString());
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    channels.add(dataSnapshot.getValue(MessageChannel.class));
+                    MessageChannel messageChannel = dataSnapshot.getValue(MessageChannel.class);
+                    messageChannel.setId(dataSnapshot.getKey());
+                    channels.add(messageChannel);
                 }
                 messageChannelAdapter.notifyItemInserted(channels.size());
             }

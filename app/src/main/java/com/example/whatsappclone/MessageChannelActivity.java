@@ -3,8 +3,6 @@ package com.example.whatsappclone;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -12,7 +10,9 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.Toast;
 
+import com.example.whatsappclone.Utils.MessageChannel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,69 +34,53 @@ public class MessageChannelActivity extends AppCompatActivity
     private TextView displayTextMessages;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef;
+    private FirebaseUser mUser;
+    private DatabaseReference MessageChannelRef, GroupNameRef, GroupMessageKeyRef;
 
-    private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
+    private String currentChannelId, currentGroupName, currentUserID, currentUserName, currentDate, currentTime;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_channel);
 
-
-
         currentGroupName = getIntent().getExtras().get("groupName").toString();
-        Toast.makeText(MessageChannelActivity.this, currentGroupName, Toast.LENGTH_SHORT).show();
-
+        currentChannelId = getIntent().getExtras().get("channelId").toString();
 
         mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         currentUserID = mAuth.getCurrentUser().getUid();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("User");
-        GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
-
-
+        MessageChannelRef = FirebaseDatabase.getInstance()
+                .getReference(MessageChannel.class.getSimpleName())
+                .child(currentChannelId);
 
         InitializeFields();
-
-
         GetUserInfo();
 
-
-        SendMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                SaveMessageInfoToDatabase();
-
-                userMessageInput.setText("");
-
-                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
+        SendMessageButton.setOnClickListener(view -> {
+            SaveMessageInfoToDatabase();
+            userMessageInput.setText("");
+            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         });
     }
 
 
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
-        GroupNameRef.addChildEventListener(new ChildEventListener() {
+        MessageChannelRef.child("messages").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
-                if (dataSnapshot.exists())
-                {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
                     DisplayMessages(dataSnapshot);
                 }
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists())
                 {
                     DisplayMessages(dataSnapshot);
@@ -137,7 +121,7 @@ public class MessageChannelActivity extends AppCompatActivity
 
     private void GetUserInfo()
     {
-        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+        MessageChannelRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {

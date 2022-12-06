@@ -47,6 +47,7 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
 
         private final TextView txtChannelName;
         private final ImageView imageChannel;
+        private String channelId;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,6 +57,7 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
         }
 
         public void bindItem(MessageChannel currentMessageChannel) {
+            channelId = currentMessageChannel.getId();
             txtChannelName.setText(currentMessageChannel.getName());
             Glide.with(context).load(currentMessageChannel.getImageUrl()).into(imageChannel);
         }
@@ -64,6 +66,7 @@ public class MessageChannelAdapter extends RecyclerView.Adapter<MessageChannelAd
         public void onClick(View view) {
             Intent messageChannelIntent = new Intent(context, MessageChannelActivity.class);
             messageChannelIntent.putExtra("groupName", txtChannelName.getText().toString());
+            messageChannelIntent.putExtra("channelId", channelId);
             context.startActivity(messageChannelIntent);
         }
     }
