@@ -9,18 +9,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerMessageChannel"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
-
-    <Button
-        android:id="@+id/btnTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create" />
-
-    <Button
-        android:id="@+id/btnTest2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
