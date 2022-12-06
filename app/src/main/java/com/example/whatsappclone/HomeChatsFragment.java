@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.whatsappclone.Utils.Message;
 import com.example.whatsappclone.Utils.MessageChannel;
@@ -81,28 +79,27 @@ public class HomeChatsFragment extends Fragment {
     }
 
     private void loadChannels() {
-        channels.clear();
-
-        ArrayList<User> users = new ArrayList<>(Arrays.asList(new User(mUser.getUid(), "username1", "test@test.com"),new User(mUser.getUid(), "username2", "test@test.com")));
-        ArrayList<Message> messages = new ArrayList<>(Arrays.asList(new Message(mUser.getUid(),"Message 1"), new Message(mUser.getUid(),"Message 2")));
-        channels.add(new MessageChannel("Test Channel, Locally created", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png", users, messages));
-
-        messageChannelAdapter.notifyItemInserted(0);
+//        channels.clear();
+//
+//        ArrayList<User> users = new ArrayList<>(Arrays.asList(new User(mUser.getUid(), "username1", "test@test.com"),new User(mUser.getUid(), "username2", "test@test.com")));
+//        ArrayList<Message> messages = new ArrayList<>(Arrays.asList(new Message(mUser.getUid(),"Message 1"), new Message(mUser.getUid(),"Message 2")));
+//        channels.add(new MessageChannel("Test Channel, Locally created", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png", users, messages));
+//
+//        messageChannelAdapter.notifyItemInserted(0);
 
         ValueEventListener messageChannelListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue(MessageChannel.class) == null) return;
+
                 channels.clear();
                 Log.d(TAG, "onDataChange");
                 Log.d(TAG, snapshot.toString());
-                if (snapshot.getValue(MessageChannel.class) == null) {
-                    Log.d(TAG, "Value is Null");
-                } else {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        channels.add(dataSnapshot.getValue(MessageChannel.class));
-                    }
-                    messageChannelAdapter.notifyItemInserted(channels.size());
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    channels.add(dataSnapshot.getValue(MessageChannel.class));
                 }
+                messageChannelAdapter.notifyItemInserted(channels.size());
             }
 
             @Override
