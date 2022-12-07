@@ -1,51 +1,44 @@
 package com.example.whatsappclone.Utils;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Message {
 
-    private String id;
-    private String message;
-    private String uid;
-    private Date dateCreate;
+    private String senderId, message, date, time;
 
     public Message() {}
 
-    public Message(String id, String message) {
-        this.id = id;
+    public Message(String senderId, String message, String date, String time) {
+        this.senderId = senderId;
         this.message = message;
+        this.date = date;
+        this.time = time;
     }
 
-    public String getId() {
-        return id;
-    }
+    public String getSenderId() { return senderId; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public void setSenderId(String senderId) { this.senderId = senderId; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public void setMessage(String message) { this.message = message; }
 
-    public String getUid() {
-        return uid;
-    }
+    public String getDate() { return date; }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+    public void setDate(String date) { this.date = date; }
 
-    public Date getDateCreate() {
-        return dateCreate;
-    }
+    public String getTime() { return time; }
 
-    public void setDateCreate(Date dateCreate) {
-        this.dateCreate = dateCreate;
+    public void setTime(String time) { this.time = time;}
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("senderId", senderId);
+        result.put("message", message);
+        result.put("date", date);
+        result.put("time", time);
+        return result;
     }
 
 }
