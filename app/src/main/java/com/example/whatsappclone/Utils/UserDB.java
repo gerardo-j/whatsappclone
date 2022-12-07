@@ -4,13 +4,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserDB {
 
-    private final DatabaseReference userReference;
+    private final static DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(User.class.getSimpleName());
+    private final static FirebaseFirestore usernameDB = FirebaseFirestore.getInstance();
 
     public UserDB() {
-        userReference = FirebaseDatabase.getInstance().getReference(User.class.getSimpleName());
+//        userReference = FirebaseDatabase.getInstance().getReference(User.class.getSimpleName());
     }
 
     public Task<Void> addChannel(String name, String imageUrl, String uid, String channelId) {
@@ -24,6 +27,10 @@ public class UserDB {
 
     public void removeChannelListener(String uid, ValueEventListener valueEventListener) {
         userReference.child(uid).child(MessageChannel.class.getSimpleName()).removeEventListener(valueEventListener);
+    }
+
+    public Task<DocumentSnapshot> findUserByUsername(String username) {
+        return usernameDB.collection("usernames").document(username).get();
     }
 
 }

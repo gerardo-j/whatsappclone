@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,10 +12,9 @@ import android.widget.Toast;
 import com.example.whatsappclone.Utils.MessageChannel;
 import com.example.whatsappclone.Utils.MessageChannelDB;
 import com.example.whatsappclone.Utils.User;
+import com.example.whatsappclone.Utils.UserDB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,8 +23,9 @@ public class CreateMessageActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private MessageChannelDB messageChannelDB;
+    private UserDB userDB;
 
-    private EditText groupNameField, friendNameField;
+    private EditText groupNameField, friendUsernameField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,41 +33,44 @@ public class CreateMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_message);
 
         messageChannelDB =  new MessageChannelDB();
+        userDB = new UserDB();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
         Button btnCreateChannel = findViewById(R.id.btnCreateChannel);
-        groupNameField = findViewById(R.id.editTxtReceiverUsername);
-        friendNameField = findViewById(R.id.editTxtChannelName);
+        groupNameField = findViewById(R.id.editTxtChannelName);
+        friendUsernameField = findViewById(R.id.editTxtReceiverUsername);
 
         btnCreateChannel.setOnClickListener(view -> createGroupRequest());
     }
 
     private void createGroupRequest() {
         String groupName = groupNameField.getText().toString();
-        String friendName = friendNameField.getText().toString();
+        String friendUsername = friendUsernameField.getText().toString();
 
-        User currentUser = new User(mUser.getUid(), mUser.getDisplayName());
-        User receiverUser = findUser(friendName);
-
-        if (TextUtils.isEmpty(groupName)) {
-            Toast.makeText(this, "Please write Group Name...", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(groupName) || TextUtils.isEmpty(friendUsername)) {
+            Toast.makeText(this, "Please write Group Name & friend name", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (receiverUser.getUid() == null) {
-            Toast.makeText(this, friendName + " does not exist", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        userDB.findUserByUsername(friendUsername).addOnSuccessListener(findUserTask -> {
+            if (findUserTask.exists()) {
+                Log.d("CreateMessageActivity", "findUser: " + findUserTask.getData());
 
-        ArrayList<User> users = new ArrayList<>(Arrays.asList(currentUser, receiverUser));
-        MessageChannel newChannel = new MessageChannel(groupName, receiverUser.getProfileImage(), users);
-        messageChannelDB.create(newChannel).addOnFailureListener(createChannelTask ->
-                Toast.makeText(this, groupName + " failed to create", Toast.LENGTH_SHORT).show());
-        finish();
+                User friendUser = new User(findUserTask.getString("uid"), friendUsername);
+                User currentUser = new User(mUser.getUid(), mUser.getDisplayName());
+
+                ArrayList<User> users = new ArrayList<>(Arrays.asList(currentUser, friendUser));
+                MessageChannel newChannel = new MessageChannel(groupName, friendUser.getProfileImage(), users);
+                messageChannelDB.create(newChannel).addOnFailureListener(createChannelTask ->
+                        Toast.makeText(this, groupName + " failed to create", Toast.LENGTH_SHORT).show());
+                finish();
+            } else {
+                Toast.makeText(this, "username don't exist", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
     }
 
-    private User findUser(String username) {
-        return new User("djedied", username);
-    }
 }
