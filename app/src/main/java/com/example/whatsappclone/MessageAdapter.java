@@ -1,6 +1,7 @@
 package com.example.whatsappclone;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             if (senderId.equals(currentUserId)) {
                 txtSenderId.setText("You");
+                txtSenderId.setTextColor(context.getResources().getColor(R.color.black));
+                txtMessage.setTextColor(context.getResources().getColor(R.color.black));
+                txtDate.setTextColor(context.getResources().getColor(R.color.black));
+                txtTime.setTextColor(context.getResources().getColor(R.color.black));
                 messageLayout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+
+            } else {
+                txtSenderId.setTextColor(context.getResources().getColor(R.color.white));
+                txtMessage.setTextColor(context.getResources().getColor(R.color.white));
+                txtDate.setTextColor(context.getResources().getColor(R.color.white));
+                txtTime.setTextColor(context.getResources().getColor(R.color.white));
+
+                messageLayout.setBackgroundColor(context.getResources().getColor(R.color.blue_200));
             }
         }
 

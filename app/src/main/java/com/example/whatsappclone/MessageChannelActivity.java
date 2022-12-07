@@ -71,7 +71,6 @@ public class MessageChannelActivity extends AppCompatActivity {
         messages = new ArrayList<>();
         messageAdapter = new MessageAdapter(this, messages, currentUserId);
         recyclerMessage.setLayoutManager(new LinearLayoutManager(this));
-        recyclerMessage.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerMessage.setAdapter(messageAdapter);
     }
 
