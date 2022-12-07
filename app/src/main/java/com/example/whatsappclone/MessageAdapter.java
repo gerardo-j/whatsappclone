@@ -19,12 +19,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private static final String TAG = MessageAdapter.class.getSimpleName();
     private Context context;
     private ArrayList<Message> messages;
-    private String currentUserId;
+    private String currentUserId, friendUsername;
 
-    public MessageAdapter(Context context, ArrayList<Message> messages, String currentUserId) {
+    public MessageAdapter(Context context, ArrayList<Message> messages, String currentUserId, String friendUsername) {
         this.context = context;
         this.messages = messages;
         this.currentUserId = currentUserId;
+        this.friendUsername = friendUsername;
     }
 
     @NonNull
@@ -74,6 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 messageLayout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
 
             } else {
+                txtSenderId.setText(friendUsername);
                 txtSenderId.setTextColor(context.getResources().getColor(R.color.white));
                 txtMessage.setTextColor(context.getResources().getColor(R.color.white));
                 txtDate.setTextColor(context.getResources().getColor(R.color.white));

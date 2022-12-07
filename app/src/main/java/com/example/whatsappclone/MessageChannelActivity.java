@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.whatsappclone.Utils.Message;
 import com.example.whatsappclone.Utils.MessageChannel;
+import com.example.whatsappclone.Utils.User;
+import com.example.whatsappclone.Utils.UserDB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -63,44 +65,50 @@ public class MessageChannelActivity extends AppCompatActivity {
                 .getReference(MessageChannel.class.getSimpleName())
                 .child(currentChannelId);
 
+        MessageChannelRef.child("users").get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                for (DataSnapshot user : snapshot.getChildren()) {
+                    User user1= user.getValue(User.class);
+                    if (!user1.getUid().equals(currentUserId)) {
+                        String friendUsername = user.child("username").getValue().toString();
+                        messages = new ArrayList<>();
+                        messageAdapter = new MessageAdapter(this, messages, currentUserId, friendUsername);
+                        recyclerMessage.setLayoutManager(new LinearLayoutManager(this));
+                        recyclerMessage.setAdapter(messageAdapter);
+                        MessageChannelRef.child("messages").addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                                if (dataSnapshot.exists()) {
+                                    DisplayMessages(dataSnapshot);
+                                }
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
+                                if (dataSnapshot.exists()) {
+                                    DisplayMessages(dataSnapshot);
+                                }
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {}
+                        });
+                        break;
+                    }
+                }
+            }
+
+        });
         initViews();
         getSupportActionBar().setTitle(currentChannelName);
         SendMessageButton.setOnClickListener(view -> SaveMessageInfoToDatabase());
 
-
-        messages = new ArrayList<>();
-        messageAdapter = new MessageAdapter(this, messages, currentUserId);
-        recyclerMessage.setLayoutManager(new LinearLayoutManager(this));
-        recyclerMessage.setAdapter(messageAdapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MessageChannelRef.child("messages").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.exists()) {
-                    DisplayMessages(dataSnapshot);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.exists()) {
-                    DisplayMessages(dataSnapshot);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
     }
 
     private void initViews() {
@@ -108,8 +116,6 @@ public class MessageChannelActivity extends AppCompatActivity {
         recyclerMessage = findViewById(R.id.recyclerMessage);
         SendMessageButton = findViewById(R.id.send_message_button);
         userMessageInput = findViewById(R.id.input_group_message);
-//        displayTextMessages = findViewById(R.id.group_chat_text_display);
-//        mScrollView = findViewById(R.id.my_scroll_view);
     }
 
     private void SaveMessageInfoToDatabase() {
@@ -135,15 +141,6 @@ public class MessageChannelActivity extends AppCompatActivity {
     private void DisplayMessages(DataSnapshot dataSnapshot) {
         Message messageObject = dataSnapshot.getValue(Message.class);
         if (messageObject == null) return;
-//        String message = messageObject.getMessage();
-//        String username = messageObject.getSenderId();
-//        String date = messageObject.getDate();
-//        String time = messageObject.getTime();
-//
-//        displayTextMessages.append(username + ":\n" + message + "\n" + date + " " + time);
-//        mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-
-
         messages.add(messageObject);
         messageAdapter.notifyItemInserted(messages.size());
         recyclerMessage.scrollToPosition(messages.size() - 1);
