@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.whatsappclone.Utils.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -114,12 +116,11 @@ public class RegisterActivity extends AppCompatActivity {
                                             FirebaseUser currentUser = mAuth.getCurrentUser();
                                             if (currentUser != null) {
                                                 User user = new User(currentUser.getUid(), username, email, DEFAULT_PROFILE_IMAGE);
-//                                                String displayName = firstName + ' ' + lastName;
-//                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                                                        .setDisplayName(displayName)
-//                                                        .setPhotoUri(Uri.parse(DEFAULT_PROFILE_IMAGE))
-//                                                        .build();
-//                                                currentUser.updateProfile(profileUpdates);
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(username)
+                                                        .setPhotoUri(Uri.parse(DEFAULT_PROFILE_IMAGE))
+                                                        .build();
+                                                currentUser.updateProfile(profileUpdates);
 
                                                 HashMap<String, Object> result = new HashMap<>();
                                                 result.put("uid", user.getUid());
