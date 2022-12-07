@@ -67,17 +67,6 @@ public class HomeChatsFragment extends Fragment {
         loadChannels();
     }
 
-    private void createMessageChannel(User senderUser, User receiverUser) {
-        Log.d(TAG, "createMessageChannel");
-        ArrayList<User> users = new ArrayList<>(Arrays.asList(senderUser, receiverUser));
-//        ArrayList<User> users = new ArrayList<>(Arrays.asList(new User(mUser.getUid(), "custom","User 1 First Name", "User 1 Last Name", "test@test.com"),new User(mUser.getUid(), "custom", "User 2 First Name", "User 2 Last Name", "test@test.com")));
-        ArrayList<Message> messages = new ArrayList<>(Arrays.asList(new Message(mUser.getUid(),"Message 1"), new Message(mUser.getUid(),"Message 2")));
-
-        MessageChannel messageChannel = new MessageChannel("New chat", "https://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/profile-icon.png",users, messages);
-        messageChannelDB.create(messageChannel)
-                .addOnSuccessListener(createMessageChannelTask -> Log.d(TAG, "Created a new message channel"));
-    }
-
     private void loadChannels() {
 //        channels.clear();
 //

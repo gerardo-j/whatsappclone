@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MessageChannelActivity">
 
-
-    <include
-        android:id="@+id/group_chat_bar_layout"
-        layout="@layout/app_bar_layout"
-        >
-    </include>
-
-
-    <ScrollView
-        android:id="@+id/my_scroll_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/group_chat_bar_layout"
-        android:layout_above="@+id/myLinearLayout">
+        android:layout_above="@+id/focusView"/>
+    <TextView
+        android:id="@+id/focusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/myLinearLayout"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+<!--    <ScrollView-->
+<!--        android:id="@+id/my_scroll_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/myLinearLayout">-->
 
-            <TextView
-                android:id="@+id/group_chat_text_display"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:textColor="@android:color/background_dark"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="60dp"
-                />
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical">-->
 
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/group_chat_text_display"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="10dp"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textColor="@android:color/background_dark"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                android:layout_marginEnd="2dp"-->
+<!--                android:layout_marginBottom="60dp"-->
+<!--                />-->
 
-    </ScrollView>
-
-
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
 
     <LinearLayout
         android:id="@+id/myLinearLayout"
