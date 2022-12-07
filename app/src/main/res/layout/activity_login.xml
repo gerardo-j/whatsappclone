@@ -10,10 +10,10 @@
         android:id="@+id/txtSignInHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Messaging app"
+        android:text="Chatting App"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

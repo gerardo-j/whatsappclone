@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
 
 public class ResetPasswordActivity extends AppCompatActivity {
     private static final String TAG = "ResetPasswordActivity";
@@ -18,6 +21,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btnResetPassword;
     private EditText editTxtEmail;
+    private TextView txtGoBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +31,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         initViews();
         btnResetPassword.setOnClickListener(view -> resetPassword());
+        txtGoBack.setOnClickListener(view -> finish());
     }
 
     private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         editTxtEmail = findViewById(R.id.editTxtEmailAddress);
         btnResetPassword = findViewById(R.id.btnResetPassword);
+        txtGoBack = findViewById(R.id.txtGoBack);
     }
 
     private void resetPassword() {
