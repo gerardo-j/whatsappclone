@@ -14,5 +14,5 @@
     <string name="submit_post_button">Post Status</string>
     <string name="edit_text_description">Description...</string>
     <string name="textview_select_img">Select an Image</string>
-    <string name="button_select_image">Select Image</string>
+    <string name="button_select_image">Select an Image</string>
 </resources>
