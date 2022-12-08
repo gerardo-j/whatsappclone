@@ -14,15 +14,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.whatsappclone.Utils.User;
 import com.example.whatsappclone.databinding.ActivityPostStatusBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class PostStatusActivity extends AppCompatActivity {
@@ -57,6 +62,8 @@ public class PostStatusActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
+        DatabaseReference userStoryRef = FirebaseDatabase.getInstance().getReference();
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File...");
         progressDialog.show();
@@ -66,16 +73,41 @@ public class PostStatusActivity extends AppCompatActivity {
         String fileName = formatter.format(now);
         storageReference = FirebaseStorage.getInstance().getReference("images/"+fileName);
         storageReference.putFile(imageURI)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                .addOnSuccessListener(taskSnapshot -> {
+                    // get user id
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    String storyPostId = userStoryRef.child(User.class.getSimpleName() + "/" + userId + "/" + StoryPost.class.getSimpleName()).push().getKey();
+                    String userPath = User.class.getSimpleName() + "/" + userId + "/" + StoryPost.class.getSimpleName() + "/" + storyPostId + "/";
+                    String storyPostPath = StoryPost.class.getSimpleName() + "/" + storyPostId + "/";
 
-                        binding.ivPostImage.setImageURI(null);
-                        Toast.makeText(PostStatusActivity.this, "Succesfully Uploaded", Toast.LENGTH_LONG).show();
-                        if (progressDialog.isShowing())
-                            progressDialog.dismiss();
+                    HashMap<String, Object> map = new HashMap<>();
+                    taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(
+                            uri -> {
+                                String imageURL = uri.toString();
+                                StoryPost storyPost = new StoryPost(userId, imageURL, binding.etStatusDescription.getText().toString());
+                                map.put(userPath, storyPost);
+                                map.put(storyPostPath, storyPost);
+//                                map.put(storyPostPath + "imageURL", imageURL);
+//                                map.put(storyPostPath + "timeStamp", System.currentTimeMillis());
+//                                map.put(storyPostPath + "userId", userId);
+//                                map.put(storyPostPath + "caption", binding.etStatusDescription.getText().toString());
+//                                map.put(userPath + "imageURL", imageURL);
+//                                map.put(userPath + "timeStamp", System.currentTimeMillis());
+//                                map.put(userPath + "userId", userId);
+//                                map.put(userPath + "caption", binding.etStatusDescription.getText().toString());
 
-                    }
+                                userStoryRef.updateChildren(map);
+//                                    progressDialog.dismiss();
+                                Toast.makeText(PostStatusActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                            }
+                    );
+
+
+                    binding.ivPostImage.setImageURI(null);
+                    Toast.makeText(PostStatusActivity.this, "Succesfully Uploaded", Toast.LENGTH_LONG).show();
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

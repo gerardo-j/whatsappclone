@@ -1,6 +1,7 @@
 package com.example.whatsappclone;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ public class HomeStatusAdapter extends RecyclerView.Adapter<HomeStatusAdapter.Vi
 
     public HomeStatusAdapter(Context context, ArrayList<StoryPost> dataset){
         this.context = context;
-        stories = dataset;
+        this.stories = dataset;
     }
 
 
@@ -47,9 +50,12 @@ public class HomeStatusAdapter extends RecyclerView.Adapter<HomeStatusAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull HomeStatusAdapter.ViewHolder holder, int position) {
         StoryPost story = stories.get(position);
-        holder.storyUsername.setText(story.username);
-        holder.storyPost.setImageResource(story.postImage);
-        holder.storyDetail.setText(story.postDetail);
+        holder.storyUsername.setText(story.getUserId());
+        Glide.with(context).load(story.getImageURL()).into(holder.storyPost);
+//        holder.storyPost.setImageResource(story.getImageURL());
+        holder.storyDetail.setText(story.getCaption());
+
+        Log.d("HomeStatusAdapter", "onBindViewHolder: " + story.getImageURL());
     }
 
     @Override
